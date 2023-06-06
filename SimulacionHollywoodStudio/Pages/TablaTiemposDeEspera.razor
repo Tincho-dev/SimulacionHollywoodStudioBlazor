@@ -1,0 +1,27 @@
+﻿@using Services
+@inject ISimuladorColasEsperaService Simulador
+
+<h3>TablaTiemposDeEspera</h3>
+//filas que sean las horas del dia, y las columnas los juegos
+
+
+<RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                Data="@tiemposDeEspera" TItem="int" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
+    <Columns>
+        <RadzenDataGridColumn TItem="int" Property="EmployeeID" Filterable="false" Title="Hora" Frozen="true" Width="80px" TextAlign="Radzen.TextAlign.Center" />
+        <RadzenDataGridColumn TItem="string" Property="FirstName" Title="Millennium Falcon" Frozen="true" Width="160px" />
+        <RadzenDataGridColumn TItem="int" Property="FirstName" Title="Dia" Frozen="true" Width="160px" />
+    </Columns>
+
+</RadzenDataGrid>
+
+@code {
+    IEnumerable<int> tiemposDeEspera;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+ 
+        //tiemposDeEspera = Simulador.();
+    }
+}

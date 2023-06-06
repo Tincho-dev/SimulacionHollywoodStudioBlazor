@@ -1,0 +1,24 @@
+﻿@page "/"
+@using Services
+@inject IDistribucionesService DistribucionesService
+
+<Simulador></Simulador>
+
+
+
+@*<h1>@u</h1>*@
+
+@code{
+
+    public double u { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        u = DistribucionesService.GenerarNumeroAleatorio();//GU(u)
+        u = DistribucionesService.GenerarNumeroAleatorio();//GU(u)
+        u = DistribucionesService.GenerarNumeroAleatorio();//GU(u)
+        u = DistribucionesService.GenerarNumeroAleatorio();//GU(u)
+
+        return base.OnInitializedAsync();
+    }
+}

@@ -1,0 +1,35 @@
+﻿@*@page "/mapaespera"*@
+@using Model;
+@using Services
+@using Radzen.Blazor
+@inject ISimuladorColasEsperaService simuladorService
+
+<RadzenGoogleMap Center="@center" Zoom="15" ApiKey="AIzaSyBCBejEG8nXgpnmC1pHHEXDmZ2HX0wpiHY">
+    @if (datosEspera != null)
+    {
+        foreach (var dato in datosEspera)
+        {
+            <RadzenGoogleMapMarker Title="@dato.Nombre" Position="@dato.Posicion" />
+        }
+    }
+</RadzenGoogleMap>
+
+@code {
+    private Radzen.GoogleMapPosition center = new Radzen.GoogleMapPosition() { Lat = 28.354, Lng = -81.5605 };
+    private List<DatoEspera> datosEspera;
+
+    protected override async Task OnInitializedAsync()
+    {
+        datosEspera = await simuladorService.ObtenerDatosEspera(90);
+    }
+
+    [Parameter]
+    public EventCallback<int> OnSimulacionRealizada { get; set; }
+
+    // Método a ser llamado cuando el componente que recibe la cantidad de gente en el parque y la hora a simular emite un evento
+    public async Task HandleOnSimulacionRealizada(int numGente)
+    {
+        datosEspera = await simuladorService.ObtenerDatosEspera(numGente);
+        StateHasChanged();
+    }
+}

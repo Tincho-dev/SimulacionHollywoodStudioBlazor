@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ServiceWorkerAssetsManifest>service-worker-assets.js</ServiceWorkerAssetsManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Pages\Funcion-razor" />
+    <None Remove="Pages\NewFile.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BlazorCharts" Version="0.4.108" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.13" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.13" PrivateAssets="all" />
+    <PackageReference Include="Radzen.Blazor" Version="4.12.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Model\Model.csproj" />
+    <ProjectReference Include="..\Services\Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Pages\Inputs\" />
+    <Folder Include="Pages\Charts\" />
+    <Folder Include="Pages\Outputs\" />
+  </ItemGroup>
+
+</Project>

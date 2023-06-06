@@ -1,0 +1,35 @@
+﻿@using Services
+@inject IDistribucionesService DistribucionesService
+
+<div class="row">
+    <div class="col">
+        <h5>Cantidad de Visitantes</h5>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <p>Visitantes</p>
+    </div>
+    <div class="col">
+        <input type="text" class="form-control" id="" name="showVisitants" readonly>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <input style="width: 100%;" type="range" class="form-control-range" id="slider" name="slider" min="0" max="100" step="1" value="50" list="slider-values">
+        <datalist id="slider-values">
+            <option value="0"></option>
+            <option value="100"></option>
+        </datalist>
+    </div>
+</div>
+
+
+@code {
+    double u;
+    protected override Task OnInitializedAsync()
+    {
+        u = DistribucionesService.GenerarNumeroAleatorio();
+        return base.OnInitializedAsync();
+    }
+}
