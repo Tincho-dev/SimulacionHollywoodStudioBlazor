@@ -35,7 +35,21 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
 
         list.Add(new DatoEspera{ 
             Nombre="Millenium Falcon",
-            TiempoEspera = new List<int> { 110,112,112,90,120,80 }
+            TiempoEspera = new Dictionary<int, int> {
+                {8,110 },
+                {9,105 },
+                {10,100 },
+                {11,95 },
+                {12,108 },
+                {13,119 },
+                {14,120 },
+                {15,100 },
+                {16,123 },
+                {17,134 },
+                {18,97 }
+            }
+
+
         });
         
 
