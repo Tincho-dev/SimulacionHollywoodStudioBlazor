@@ -1,46 +1,45 @@
 ﻿<main>
     <div class="container"> <!-- CONTAINER DE MAIN-->
-        
 
-        <div class="row"> <!-- ROW 1: CONTIENE 1 COLUMNA DEL TITULO DEL SIMULADOR -->
+        <div class="row"><!-- ROW 1: CONTIENE 1 COLUMNA DEL TITULO DEL SIMULADOR -->
             <div class="col">
                 <div class="container-titulo">
                     <h1 class="titulo">Simulador</h1>
                 </div>
             </div> <!--CIERRE COL 1 DE TITULO-->
-
         </div> <!--CIERRE ROW 1 DE TITULO-->
-
 
         <hr> <!-- SEPARADOR DE TITULO Y CONTENIDO-->
 
 
-        <div class="container-principal"> <!-- DIV DE CONTAINER PRINCIPAL -->
-            
+        <div class="container-principal"> <!-- DIV DE CONTAINER PRINCIPAL: CONTIENE COLUMNA DE DATOS,FUNCIÓN Y MAPA -->
+
             <div class="row"> <!-- ROW 2 DE CONTENIDO>: CONTIENE  -->
-
-
-
-                <div class="col-sm-4"> <!-- COL 1 DE INPUTS (UNICA COL DEL ROW)-->
-                    <div class="container"> <!-- CONTAINER DE INPUTS -->
+                <div class="col-sm-4">
+                    <!-- COL 1 DE INPUTS (UNICA COL DEL ROW)-->
+                    <div class="container">
+                        <!-- CONTAINER DE INPUTS -->
                         <InputTemporadaFecha></InputTemporadaFecha>
                         <hr> <!-- SEPARADOR DE FECHA/TEMPORADA Y CANTIDAD DE VISITANTES -->
                         <InputCantidadDeVisitantes></InputCantidadDeVisitantes>
-                        <InputGanaciaEsperada ingreso="9000.9"></InputGanaciaEsperada>
+                        <InputGanaciaEsperada></InputGanaciaEsperada>
                         @*<InputNiveles></InputNiveles>*@
                     </div> <!--CIERRE CONTAINER DE INPUTS -->
                 </div> <!--CIERRE COL 1 DE INPUTS-->
-          
-                
-                <div class="col-sm-4" style="text-align: center;"> <!--COL 2 DE GRAFICA-->
-                    <div class="row"> <!--ROW 1 DE ENTRADA EN OFERTA -->
+
+
+                <div class="col-sm-4" style="text-align: center;">
+                    <!--COL 2 DE GRAFICA-->
+                    <div class="row">
+                        <!--ROW 1 DE ENTRADA EN OFERTA -->
                         <div class="col" style="text-align: center;">
                             @*<h4>Precio de la entrada en oferta</h4>*@
                         </div>
                     </div> <!--CIERRE ROW 1 DE ENTRADA EN OFERTA -->
 
 
-                    <div class="row"> <!--ROW 2 DE IMAGEN -->
+                    <div class="row">
+                        <!--ROW 2 DE IMAGEN -->
                         <div class="col">
                             <div class="container">
                                 <ConteinerFuncion></ConteinerFuncion>
@@ -50,20 +49,29 @@
 
                     </div> <!--CIERRE ROW 2 DE IMAGEN -->
 
-                    <div class="row"> <!-- ROW 3 DE CANTIDAD VISITANTES -->
+                    <div class="row">
+                        <!-- ROW 3 DE CANTIDAD VISITANTES -->
                         <div class="col" style="text-align: center;">
                             <p>Cantidad de Visitantes</p>
                         </div>
                     </div> <!--CIERRE ROW 3 DE CANTIDAD VISITANTES -->
                 </div> <!--CIERRE COL 2 DE GRAFICA-->
                 <!--<div class="col"><div class="vertical-separator"></div></div> -->
+
+
                 <div class="col-sm-4">
                     <!-- COL 3 DE MAPA -->
                     <ConteinerMapa></ConteinerMapa>
                 </div> <!--CIERRE COL 3 DE MAPA -->
+
+
+
             </div> <!--CIERRE ROW 2 DE CONTENIDO-->
+
+
         </div> <!-- CIERRE DE CONTAINER PRINCIPAL-->
-        <hr> <!-- SEPARADOR DE CONTENIDO Y FOOTER -->
+
+
     </div> <!-- CIERRE DE CONTAINER DE MAIN-->
 </main>
 

@@ -98,19 +98,18 @@ body {
     margin: 0;
     padding: 0;
     min-height: 100vh; /* Asegura que la altura del body ocupe toda la pantalla */
-    display: flex;
-    flex-direction: column; /* Utilizamos flexbox para alinear el footer al final de la página */
+    flex-direction: column; /* Utilizamos flexbox para alinear el footer al final de la página */  
 }
 
 main {
-    flex: 1; /* Utilizamos flexbox para asegurarnos de que el main ocupe todo el espacio disponible */
-    padding-bottom: 50px; /* Ajusta el padding-bottom al mismo valor que la altura del footer */
+    min-height: 530px; /* background-color:blueviolet; */ 
 }
 
 
 footer {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    height: 50px; /* Establece la altura del footer */
+    padding-top: 10px;
+    padding: 20px;
+    text-align: left;
+    color: black;
+    border-top: 3px solid;
 }
