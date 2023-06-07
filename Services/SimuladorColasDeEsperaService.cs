@@ -25,6 +25,17 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
         return visitantes;
     }
 
+    public double CalcularTiempoDeEspera(int numPersonasCola, double tasaLlegada)
+    {
+        // Convertir la tasa de llegada a personas por minuto
+        double tasaLlegadaMinuto = tasaLlegada;
+
+        // Utilizar la fórmula de Little para calcular el tiempo de espera promedio
+        double tiempoEspera = numPersonasCola / tasaLlegadaMinuto;
+
+        return tiempoEspera;
+    }
+
     public int TiempoDeEspera(double tasaDeLlegada, double tasaDeServicio)
     {
         double u = DistribucionesService.GenerarNumeroAleatorio();
@@ -35,12 +46,12 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
         return (int)wq;
     }
 
-    public Dictionary<int, int> TiemposDeEspera(double tasaDeLlegada, double tasaDeServicio)
+    public Dictionary<int, double> TiemposDeEspera(double tasaDeLlegada, double tasaDeServicio)
     {
-        var tiemposDeEspera = new Dictionary<int, int>();
+        var tiemposDeEspera = new Dictionary<int, double>();
         for (int i = 8; i < 23; i++)
         {
-            tiemposDeEspera.Add(i, TiempoDeEspera(tasaDeLlegada, tasaDeServicio));
+            tiemposDeEspera.Add(i, CalcularTiempoDeEspera( 300, tasaDeServicio));
         }
         return tiemposDeEspera;
     }
@@ -52,13 +63,13 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
         list.Add(new DatoEspera
         {
             Nombre = "Rise of the Resistance",
-            TiempoEspera = TiemposDeEspera(0.057, 1/18)
+            TiempoEspera = TiemposDeEspera(0.057, 0.056)
         });
         list.Add(
         new DatoEspera
         {
             Nombre = "Millenium Falcon",
-            TiempoEspera = TiemposDeEspera(0.045,1/4.5)
+            TiempoEspera = TiemposDeEspera(0.045, 0.022)
         });
         return Task.FromResult(list);
     }
