@@ -1,27 +1,48 @@
 ﻿@using Services
-@inject ISimuladorColasEsperaService Simulador
+@using Model
+@inject ISimuladorColasEsperaService simulador
 
-<h3>TablaTiemposDeEspera</h3>
-//filas que sean las horas del dia, y las columnas los juegos
+<h3>Tabla Tiempos De Espera</h3>
 
+<table class="rz-table">
+    <thead>
+        <tr class="rz-table-header-row">
+            <th class="rz-column-title">Hora</th>
+            @foreach (var dato in tiemposDeEspera)
+            {
+                <th class="rz-column-title">@dato.Nombre</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var key in tiemposDeEspera.First().TiempoEspera.Keys)
+        {
+            <tr class="rz-table-row">
+                <td class="rz-table-cell">@key:00</td>
+                @foreach (var dato in tiemposDeEspera)
+                {
+                    if (dato.TiempoEspera.TryGetValue(key, out var tiempo))
+                    {
+                        <td class="rz-table-cell">@tiempo min</td>
+                    }
+                    else
+                    {
+                        <td class="rz-table-cell">-</td>
+                    }
+                }
+            </tr>
+        }
+    </tbody>
+</table>
 
-<RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
-                Data="@tiemposDeEspera" TItem="int" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
-    <Columns>
-        <RadzenDataGridColumn TItem="int" Property="EmployeeID" Filterable="false" Title="Hora" Frozen="true" Width="80px" TextAlign="Radzen.TextAlign.Center" />
-        <RadzenDataGridColumn TItem="string" Property="FirstName" Title="Millennium Falcon" Frozen="true" Width="160px" />
-        <RadzenDataGridColumn TItem="int" Property="FirstName" Title="Dia" Frozen="true" Width="160px" />
-    </Columns>
-
-</RadzenDataGrid>
 
 @code {
-    IEnumerable<int> tiemposDeEspera;
+    IEnumerable<DatoEspera> tiemposDeEspera;
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
  
-        //tiemposDeEspera = Simulador.();
+        tiemposDeEspera = await simulador.ObtenerDatosEspera(90);
     }
 }
