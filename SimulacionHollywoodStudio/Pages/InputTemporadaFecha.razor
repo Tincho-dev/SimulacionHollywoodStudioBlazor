@@ -21,10 +21,16 @@
         <p>Fecha</p>
     </div>
     <div class="col">
-        <input type="date" class="form-control" id="fecha" name="fecha">
+        <input type="month" class="form-control" id="fecha" name="fecha" min="2023-01" max="2023-12">
+        @*<RadzenDropDown TValue="string" @bind-Value="@selectedItem">*@
+
+            <!-- Agrega más opciones según tus necesidades -->
+        @*</RadzenDropDown>*@
+
+
     </div>
 </div>
 
 @code {
-
+   
 }
