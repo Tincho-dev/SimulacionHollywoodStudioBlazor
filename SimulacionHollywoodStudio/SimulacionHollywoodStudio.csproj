@@ -8,6 +8,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Pages\Charts\**" />
+    <Compile Remove="Pages\Inputs\**" />
+    <Compile Remove="Pages\Outputs\**" />
+    <Content Remove="Pages\Charts\**" />
+    <Content Remove="Pages\Inputs\**" />
+    <Content Remove="Pages\Outputs\**" />
+    <EmbeddedResource Remove="Pages\Charts\**" />
+    <EmbeddedResource Remove="Pages\Inputs\**" />
+    <EmbeddedResource Remove="Pages\Outputs\**" />
+    <None Remove="Pages\Charts\**" />
+    <None Remove="Pages\Inputs\**" />
+    <None Remove="Pages\Outputs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Pages\Funcion-razor" />
     <None Remove="Pages\NewFile.txt" />
   </ItemGroup>
@@ -26,12 +41,6 @@
 
   <ItemGroup>
     <ServiceWorker Include="wwwroot\service-worker.js" PublishedContent="wwwroot\service-worker.published.js" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Pages\Inputs\" />
-    <Folder Include="Pages\Charts\" />
-    <Folder Include="Pages\Outputs\" />
   </ItemGroup>
 
 </Project>

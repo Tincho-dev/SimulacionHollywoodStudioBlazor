@@ -1,51 +1,49 @@
 ﻿@using Model;
 @using Services
-@inject ISimuladorColasEsperaService Simulador
+@using Model
+@inject ISimuladorColasEsperaService simulador
 
-<h3>TablaTiemposDeEspera</h3>
-@*//filas que sean las horas del dia, y las columnas los juegos*@
-
-@*
-<RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
-                Data="@tiemposDeEspera" TItem="int" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or">
-    <Columns>
-        <RadzenDataGridColumn TItem="int" Property="EmployeeID" Filterable="false" Title="Hora" Frozen="true" Width="80px" TextAlign="Radzen.TextAlign.Center" />
-        <RadzenDataGridColumn TItem="string" Property="FirstName" Title="Millennium Falcon" Frozen="true" Width="160px" />
-        <RadzenDataGridColumn TItem="int" Property="FirstName" Title="Dia" Frozen="true" Width="160px" />
-    </Columns>
-
-</RadzenDataGrid>*@
+<h3>Tabla Tiempos De Espera</h3>
 
 <table class="rz-table">
     <thead>
-        <tr>
-            <th>Dia</th>
-            <th>Tiempo de espera</th>
+        <tr class="rz-table-header-row">
+            <th class="rz-column-title">Hora</th>
+            @foreach (var dato in tiemposDeEspera)
+            {
+                <th class="rz-column-title">@dato.Nombre</th>
+            }
         </tr>
     </thead>
     <tbody>
-        @foreach (var elemento in TiemposDeEspera.Result)
+        @foreach (var key in tiemposDeEspera.First().TiempoEspera.Keys)
         {
-        <tr>
-            <td>@elemento.TiempoEspera.Values</td>
-            <td>Dato 2</td>
-        </tr>
+            <tr class="rz-table-row">
+                <td class="rz-table-cell">@key:00</td>
+                @foreach (var dato in tiemposDeEspera)
+                {
+                    if (dato.TiempoEspera.TryGetValue(key, out var tiempo))
+                    {
+                        <td class="rz-table-cell">@tiempo min</td>
+                    }
+                    else
+                    {
+                        <td class="rz-table-cell">-</td>
+                    }
+                }
+            </tr>
         }
-        <!-- Agrega más filas según sea necesario -->
     </tbody>
 </table>
 
+
 @code {
-    Task<List<DatoEspera>> TiemposDeEspera;
-    Dictionary<int, int> diccionarioTE = new Dictionary<int, int>();
-    //[Parameter]
-    //public Task<List<DatoEspera>> TiemposDeEspera { get; set; }
+    IEnumerable<DatoEspera> tiemposDeEspera;
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-
-        TiemposDeEspera = Simulador.ObtenerDatosEspera(700);
-        //diccionarioTE = TiemposDeEspera.Result[1];
+ 
+        tiemposDeEspera = await simulador.ObtenerDatosEspera(90);
     }
 }

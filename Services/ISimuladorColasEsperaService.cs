@@ -9,7 +9,7 @@ namespace Services;
 
 public interface ISimuladorColasEsperaService
 {
-    int TiempoDeEspera(int visitantesEnCola, double tiempoDeServicio);
+    int TiempoDeEspera(double tasaDeLlegada, double tasaDeServicio);
     int CantidadVisitantesMensuales(Temporada temporada);
     Task<List<DatoEspera>> ObtenerDatosEspera(int numGente);
 }
