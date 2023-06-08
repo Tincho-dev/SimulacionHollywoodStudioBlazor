@@ -1,4 +1,7 @@
 ﻿using Model;
+using Newtonsoft.Json;
+using Radzen;
+using System;
 
 namespace Services;
 
@@ -11,6 +14,39 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
         DistribucionesService = distribucionesService;
     }
 
+    public DatoEspera CrearDatoEspera(string nombreAtraccion)
+    {
+        var tasasDeLlegada = new Dictionary<DateTime, double>();
+        var year = 2023;
+
+        for (int mes = 1; mes <= 12; mes++)
+        {
+            for (int dia = 1; dia <= DateTime.DaysInMonth(year, mes); dia++)
+            {
+                var fecha = new DateTime(year, mes, dia);
+                for (int hora = 8; hora < 18; hora++)
+                {
+                    var tasaHora = TasasDeLlegadaData.TasasPorHora.ContainsKey(hora.ToString()) ? TasasDeLlegadaData.TasasPorHora[hora.ToString()] : 0;
+                    var tasaMes = TasasDeLlegadaData.TasasPorMes.ContainsKey(mes.ToString()) ? TasasDeLlegadaData.TasasPorMes[mes.ToString()] : 0;
+                    var tasaDia = TasasDeLlegadaData.TasasPorDia.ContainsKey(((int)fecha.DayOfWeek).ToString()) ? TasasDeLlegadaData.TasasPorDia[((int)fecha.DayOfWeek).ToString()] : 0;
+
+                    var tasaFinal = (tasaHora + tasaMes + tasaDia) / 3;
+
+                    tasasDeLlegada.Add(new DateTime(year, mes, dia, hora, 0, 0), 313/tasaFinal);
+                }
+            }
+        }
+
+        return new DatoEspera
+        {
+            Nombre = nombreAtraccion,
+            Posicion = new GoogleMapPosition(), // Aquí puedes asignar la posición real
+            TiempoEspera = tasasDeLlegada
+        };
+    }
+
+
+    #region Visitantes y tiempos de espera
     public int CantidadVisitantesMensuales(Temporada temporada)
     {
         int visitantes;
@@ -36,41 +72,14 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
         return tiempoEspera;
     }
 
-    public int TiempoDeEspera(double tasaDeLlegada, double tasaDeServicio)
-    {
-        double u = DistribucionesService.GenerarNumeroAleatorio();
-        tasaDeLlegada = -tasaDeLlegada * Math.Log(u);
-
-        double wq = tasaDeLlegada / (tasaDeServicio * (tasaDeServicio - tasaDeLlegada));
-
-        return (int)wq;
-    }
-
-    public Dictionary<int, double> TiemposDeEspera(double tasaDeLlegada, double tasaDeServicio)
-    {
-        var tiemposDeEspera = new Dictionary<int, double>();
-        for (int i = 8; i < 23; i++)
-        {
-            tiemposDeEspera.Add(i, CalcularTiempoDeEspera( 300, tasaDeServicio));
-        }
-        return tiemposDeEspera;
-    }
-
     public Task<List<DatoEspera>> ObtenerDatosEspera(int numGente)
     {
-        List<DatoEspera> list = new();
-
-        list.Add(new DatoEspera
+        List<DatoEspera> list = new()
         {
-            Nombre = "Rise of the Resistance",
-            TiempoEspera = TiemposDeEspera(0.057, 0.056)
-        });
-        list.Add(
-        new DatoEspera
-        {
-            Nombre = "Millenium Falcon",
-            TiempoEspera = TiemposDeEspera(0.045, 0.022)
-        });
+            CrearDatoEspera("Rise of the Resistance")
+        //CrearDatoEspera("Rise of the Resistance");
+        };
         return Task.FromResult(list);
     }
+    #endregion
 }
