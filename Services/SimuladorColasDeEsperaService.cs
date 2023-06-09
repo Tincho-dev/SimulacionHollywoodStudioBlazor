@@ -24,7 +24,7 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
             for (int dia = 1; dia <= DateTime.DaysInMonth(year, mes); dia++)
             {
                 var fecha = new DateTime(year, mes, dia);
-                for (int hora = 8; hora < 18; hora++)
+                for (int hora = 8; hora <= 23; hora++)
                 {
                     var tasaHora = TasasDeLlegadaData.TasasPorHora.ContainsKey(hora.ToString()) ? TasasDeLlegadaData.TasasPorHora[hora.ToString()] : 0;
                     var tasaMes = TasasDeLlegadaData.TasasPorMes.ContainsKey(mes.ToString()) ? TasasDeLlegadaData.TasasPorMes[mes.ToString()] : 0;

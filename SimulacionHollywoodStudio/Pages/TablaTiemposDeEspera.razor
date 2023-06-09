@@ -17,36 +17,37 @@
 {
     var hours = tiemposDeEsperaFiltrados.First().TiempoEspera.Keys.Select(k => k.Hour).Distinct().OrderBy(h => h);
 
-    <table class="rz-table">
-        <thead>
-            <tr class="rz-table-header-row">
-                <th class="rz-column-title">Hora</th>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Hora</th>
+            @foreach (var dato in tiemposDeEsperaFiltrados)
+            {
+                <th>@dato.Nombre</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var hour in hours)
+        {
+            <tr>
+                <td>@hour:00</td>
                 @foreach (var dato in tiemposDeEsperaFiltrados)
                 {
-                    <th class="rz-column-title">@dato.Nombre</th>
+                    if (dato.TiempoEspera.TryGetValue(new DateTime(selectedDate.Year, selectedDate.Month, selectedDate.Day, hour, 0, 0), out var tiempo))
+                    {
+                        <td>@tiempo.ToString("#") min</td>
+                    }
+                    else
+                    {
+                        <td>-</td>
+                    }
                 }
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var hour in hours)
-            {
-                <tr class="rz-table-row">
-                    <td class="rz-table-cell">@hour:00</td>
-                    @foreach (var dato in tiemposDeEsperaFiltrados)
-                    {
-                        if (dato.TiempoEspera.TryGetValue(new DateTime(selectedDate.Year, selectedDate.Month, selectedDate.Day, hour, 0, 0), out var tiempo))
-                        {
-                            <td class="rz-table-cell">@tiempo.ToString("#") min</td>
-                        }
-                        else
-                        {
-                            <td class="rz-table-cell">-</td>
-                        }
-                    }
-                </tr>
-            }
-        </tbody>
-    </table>
+        }
+    </tbody>
+</table>
+
 }
 
 @code {
