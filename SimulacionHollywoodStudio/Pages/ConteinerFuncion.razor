@@ -6,64 +6,49 @@
 
 
     <div class="row"> <!--ROW 2 DE LA FUNCIÓN -->
-        <div class="col">
-            <div class="container">
+    <div class="col-sm-12">
+        <div class="container">
                 <!-- Function here -->
 
-                @*<RadzenChart TItem="DataPoint" Width="400px" Height="300px">
-                    <RadzenCategoryAxis Categories="@(Enumerable.Range(1, 10))"></RadzenCategoryAxis>
-                    <RadzenLineSeries Data="@GetFunctionData()"></RadzenLineSeries>
-                </RadzenChart>*@
+            <img class="imagen-funcion" src="images/ImagenFuncion.jpg" alt="" />
 
-                @*<BarChart TItem="int" Data="datos" Options="opciones" Width="400" Height="300" />*@
-
-
-
-                @*<img class="imagen-funcion" src="images/funcion.png" alt="función">*@
-
-                <!-- MODIFICAR GRAFICA PARA QUE SEA GRAFICA DE UNA FUNCIÓN-->
-            <RadzenChart>
+           @* <RadzenChart>
                 <RadzenColumnSeries Data="@revenue" CategoryProperty="Quarter" ValueProperty="Revenue" />
-            </RadzenChart>
+            </RadzenChart>*@
 
             </div>
         </div> 
     </div> <!--CIERRE ROW 2 DE IMAGEN -->
 
-    <div class="row"> <!-- ROW 3 DE CANTIDAD VISITANTES -->
-        <div class="col" style="text-align: center;">
-            @*<p>Cantidad de Visitantes</p>*@
-        </div>
-    </div> <!--CIERRE ROW 3 DE CANTIDAD VISITANTES -->
 
 @code {
-    class DataItem
-    {
-        public string Quarter { get; set; }
-        public double Revenue { get; set; }
-    }
+    //class DataItem
+    //{
+    //    public string Quarter { get; set; }
+    //    public double Revenue { get; set; }
+    //}
 
-    DataItem[] revenue = new DataItem[]
-    {
-      new DataItem
-      {
-          Quarter = "Q1",
-          Revenue = 234000
-      },
-      new DataItem
-      {
-          Quarter = "Q2",
-          Revenue = 284000
-      },
-      new DataItem
-      {
-          Quarter = "Q3",
-          Revenue = 274000
-      },
-      new DataItem
-      {
-          Quarter = "Q4",
-          Revenue = 294000
-      }
-    };
+    //DataItem[] revenue = new DataItem[]
+    //{
+    //  new DataItem
+    //  {
+    //      Quarter = "Q1",
+    //      Revenue = 234000
+    //  },
+    //  new DataItem
+    //  {
+    //      Quarter = "Q2",
+    //      Revenue = 284000
+    //  },
+    //  new DataItem
+    //  {
+    //      Quarter = "Q3",
+    //      Revenue = 274000
+    //  },
+    //  new DataItem
+    //  {
+    //      Quarter = "Q4",
+    //      Revenue = 294000
+    //  }
+    //};
 }
