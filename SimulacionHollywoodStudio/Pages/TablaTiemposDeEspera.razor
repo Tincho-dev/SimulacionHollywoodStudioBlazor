@@ -1,49 +1,79 @@
-﻿@using Model;
+﻿@using Radzen
+@using Radzen.Blazor
+@using Model;
 @using Services
-@using Model
 @inject ISimuladorColasEsperaService simulador
 
-<h3>Tabla Tiempos De Espera</h3>
+<RadzenHeading Size="H3" Text="Tabla Tiempos De Espera"></RadzenHeading>
 
-<table class="rz-table">
-    <thead>
-        <tr class="rz-table-header-row">
-            <th class="rz-column-title">Hora</th>
-            @foreach (var dato in tiemposDeEspera)
-            {
-                <th class="rz-column-title">@dato.Nombre</th>
-            }
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var key in tiemposDeEspera.First().TiempoEspera.Keys)
-        {
-            <tr class="rz-table-row">
-                <td class="rz-table-cell">@key:00</td>
-                @foreach (var dato in tiemposDeEspera)
+<div style="display: flex; align-items: center; margin-bottom: 10px;">
+    <RadzenButton Icon="arrow_left" Click="@(args => ChangeDate(-1))"></RadzenButton>
+    <RadzenDatePicker @bind-Value="selectedDate" Change="@(args => OnDateChanged(args))" Style="margin: 0 10px;"></RadzenDatePicker>
+    <RadzenButton Icon="arrow_right" Click="@(args => ChangeDate(1))"></RadzenButton>
+</div>
+
+
+@if (tiemposDeEsperaFiltrados != null && tiemposDeEsperaFiltrados.Any())
+{
+    var hours = tiemposDeEsperaFiltrados.First().TiempoEspera.Keys.Select(k => k.Hour).Distinct().OrderBy(h => h);
+
+    <table class="rz-table">
+        <thead>
+            <tr class="rz-table-header-row">
+                <th class="rz-column-title">Hora</th>
+                @foreach (var dato in tiemposDeEsperaFiltrados)
                 {
-                    if (dato.TiempoEspera.TryGetValue(key, out var tiempo))
-                    {
-                        <td class="rz-table-cell">@tiempo min</td>
-                    }
-                    else
-                    {
-                        <td class="rz-table-cell">-</td>
-                    }
+                    <th class="rz-column-title">@dato.Nombre</th>
                 }
             </tr>
-        }
-    </tbody>
-</table>
-
+        </thead>
+        <tbody>
+            @foreach (var hour in hours)
+            {
+                <tr class="rz-table-row">
+                    <td class="rz-table-cell">@hour:00</td>
+                    @foreach (var dato in tiemposDeEsperaFiltrados)
+                    {
+                        if (dato.TiempoEspera.TryGetValue(new DateTime(selectedDate.Year, selectedDate.Month, selectedDate.Day, hour, 0, 0), out var tiempo))
+                        {
+                            <td class="rz-table-cell">@tiempo.ToString("#") min</td>
+                        }
+                        else
+                        {
+                            <td class="rz-table-cell">-</td>
+                        }
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
 @code {
     IEnumerable<DatoEspera> tiemposDeEspera;
+    IEnumerable<DatoEspera> tiemposDeEsperaFiltrados;
+    DateTime selectedDate = DateTime.Today;
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
- 
+
         tiemposDeEspera = await simulador.ObtenerDatosEspera(90);
+        OnDateChanged(selectedDate);
+    }
+
+    void OnDateChanged(DateTime? date)
+    {
+        if (date.HasValue)
+        {
+            selectedDate = date.Value;
+            tiemposDeEsperaFiltrados = tiemposDeEspera.Where(d => d.TiempoEspera.Keys.Any(k => k.Date == selectedDate.Date));
+        }
+    }
+
+    void ChangeDate(int days)
+    {
+        selectedDate = selectedDate.AddDays(days);
+        OnDateChanged(selectedDate);
     }
 }
