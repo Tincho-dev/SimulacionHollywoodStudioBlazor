@@ -1,42 +1,13 @@
-﻿<div class="row"> <!--ROW 1 DE TITULO DE FUNCIÓN -->
-        <div class="col" style="text-align: center;">
-            <h4>Grafica de tiempo en espera</h4> <!-- Grafica de tiempo en espera en función de cant. Visitantes-->
-        </div>
-    </div> <!--CIERRE ROW 1 DE ENTRADA EN OFERTA -->
+﻿@inject IJSRuntime JSRuntime
 
-
-    <div class="row"> <!--ROW 2 DE LA FUNCIÓN -->
-    <div class="col-sm-12">
-        <div class="container">
-                <!-- Function here -->
-
-            @*<img class="imagen-funcion" src="images/ImagenFuncion.jpg" alt="" />*@
-
-            <RadzenChart TItem="Point">
-                <RadzenLineSeries Data="@GenerarDatos()" ValueProperty="Y" />
-            </RadzenChart>
-
-
-
-            </div>
-        </div> 
-    </div> <!--CIERRE ROW 2 DE IMAGEN -->
-
-    
+<canvas id="myChart"></canvas>
 
 @code {
-
-    public class Point
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        public double X { get; set; }
-        public double Y { get; set; }
-    }
-
-    IEnumerable<Point> GenerarDatos()
-    {
-        double m = 7; // Pendiente
-        double b = 1; // Intersección con el eje Y
-
-        return Enumerable.Range(4, 11).Select(x => new Point { X = x, Y = m * x + b });
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("plotFunction");
+        }
     }
 }
