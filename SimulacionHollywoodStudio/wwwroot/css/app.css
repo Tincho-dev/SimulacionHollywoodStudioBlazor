@@ -117,16 +117,18 @@ main {
 }
 
 
-footer {
-    padding-top: 10px;
-    padding: 20px;
-    text-align: left;
-    color: black;
-    border-top: 3px solid;
-}
+
 
 .contenedor_Datos {
     border: 3px solid black;
     border-radius: 20px;
+    background-color:white;
+}
+
+.navbar {
+    /* No funciona */
+    border-bottom: 3px solid black; /* Estilo de borde deseado */
+    border-radius: 5px; /* Opcional: añade esquinas redondeadas al borde */
+    background-color: white;
 }
 

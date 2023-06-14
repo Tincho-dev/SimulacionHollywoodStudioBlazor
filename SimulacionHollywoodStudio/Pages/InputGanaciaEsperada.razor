@@ -1,14 +1,15 @@
 ﻿
-<div class="row">
-    <div class="col">
+<div class="row d-flex align-items-center justify-content-center">
+    <div class="col-5 text-left d-flex align-items-center">
         <p>Ingreso esperado: </p>
     </div>
-    <div class="col">
+    <div class="col-7">
         @*<p>@ingreso</p>*@
-        <input type="number" name="quantity" min="0" max="100" step="1" value="0">
+        <input class="w-100" type="number" name="quantity" min="0" max="100" step="1" value="0">
     </div>
 </div>
 
+<hr>
 
 @code {
     [Parameter]

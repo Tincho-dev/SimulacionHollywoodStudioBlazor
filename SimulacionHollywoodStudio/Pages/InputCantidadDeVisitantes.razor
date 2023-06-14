@@ -3,30 +3,28 @@
 
 <div class="row">
     <div class="col">
-        <h5>Cantidad de Visitantes</h5>
+        <h3>Cantidad de Visitantes</h3>
     </div>
 </div>
 
-<div class="row">
-    <div class="col">
+<div class="row d-flex align-items-center justify-content-center">
+    <div class="col-5 text-left">
         <p>Visitantes</p>
     </div>
-    <div class="col">
+    <div class="col-7">
         <input type="text" class="form-control" id="" name="showVisitants" readonly>
     </div>
 </div>
 
 <div class="row">
-    <div class="col"> 
-        @*<div class="range" >
-            <input type="range" class="form-range" id="customRange1" style="color:red !important;" />
-        </div>*@
-        <div class="rz-p-12 rz-text-align-center">
+    <div class="col" >
+        <div class="rz-p-6 rz-text-align-center">
             <RadzenSlider @bind-Value=@value TValue="int" />
         </div>
     </div>
 </div>
 
+<hr>
 
 @code {
     double u;

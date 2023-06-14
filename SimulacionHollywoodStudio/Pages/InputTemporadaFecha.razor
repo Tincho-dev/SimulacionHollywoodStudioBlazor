@@ -1,33 +1,29 @@
 ﻿<div class="row">
     <div class="col">
-        <h5>Fecha y temporada</h5>
+        <h3>Fecha y temporada</h3>
     </div>
 </div>
 
-<div class="row" style="margin:10px;">
-    <div class="col">
+<div class="row d-flex align-items-center justify-content-center mb-3">
+    <div class="col-5 text-left">
         <p>Temporada</p>
     </div>
-    <div class="col">
-        <div class="btn-group" role="group" aria-label="Basic example">
+    <div class="col-7">
+        
+            <div class="btn-group w-100" role="group" aria-label="Basic example">
             <button type="button" class="btn btn-primary">Alta</button>
             <button type="button" class="btn btn-primary">Baja</button>
+        
         </div>
     </div>
 </div>
 
 <div class="row">
-    <div class="col">
+    <div class="col-5 text-left">
         <p>Fecha</p>
     </div>
-    <div class="col">
+    <div class="col-7">
         <input type="month" class="form-control" id="fecha" name="fecha" min="2023-01" max="2023-12">
-        @*<RadzenDropDown TValue="string" @bind-Value="@selectedItem">*@
-
-            <!-- Agrega más opciones según tus necesidades -->
-        @*</RadzenDropDown>*@
-
-
     </div>
 </div>
 
