@@ -64,6 +64,17 @@ a, .btn-link {
     }
 
 /*Estilos componenete de simulacion*/
+.contenedor_Tabla {
+    /* VS no está leyendo este estilo nose porque, pusimos un style */
+    border: 3px solid black;
+    border-radius: 20px;
+    height: 300px; /* Establece la altura máxima del contenedor */
+    overflow-y: scroll; /* Añade un scroll vertical al contenedor */
+    display: flex; /* Aplica un sistema de cajas flexibles al contenedor */
+    align-items: center; /* Centra verticalmente los elementos dentro del contenedor */
+    justify-content: center; /* Centra horizontalmente los elementos dentro del contenedor */
+}
+
 
 .container-titulo {
     text-align: center;
@@ -118,3 +129,4 @@ footer {
     border: 3px solid black;
     border-radius: 20px;
 }
+

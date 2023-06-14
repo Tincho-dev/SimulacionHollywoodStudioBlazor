@@ -3,7 +3,6 @@
 @using Model;
 @using Services
 @inject ISimuladorColasEsperaService simulador
-
 <RadzenHeading Size="H3" Text="Tabla Tiempos De Espera"></RadzenHeading>
 
 <div style="display: flex; align-items: center; margin-bottom: 10px;">
@@ -16,38 +15,37 @@
 @if (tiemposDeEsperaFiltrados != null && tiemposDeEsperaFiltrados.Any())
 {
     var hours = tiemposDeEsperaFiltrados.First().TiempoEspera.Keys.Select(k => k.Hour).Distinct().OrderBy(h => h);
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Hora</th>
-            @foreach (var dato in tiemposDeEsperaFiltrados)
-            {
-                <th>@dato.Nombre</th>
-            }
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var hour in hours)
-        {
-            <tr>
-                <td>@hour:00</td>
-                @foreach (var dato in tiemposDeEsperaFiltrados)
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Hora</th>
+                    @foreach (var dato in tiemposDeEsperaFiltrados)
+                    {
+                        <th>@dato.Nombre</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var hour in hours)
                 {
-                    if (dato.TiempoEspera.TryGetValue(new DateTime(selectedDate.Year, selectedDate.Month, selectedDate.Day, hour, 0, 0), out var tiempo))
-                    {
-                        <td>@tiempo.ToString("#") min</td>
-                    }
-                    else
-                    {
-                        <td>-</td>
-                    }
+                    <tr>
+                        <td>@hour:00</td>
+                        @foreach (var dato in tiemposDeEsperaFiltrados)
+                        {
+                            if (dato.TiempoEspera.TryGetValue(new DateTime(selectedDate.Year, selectedDate.Month, selectedDate.Day, hour, 0, 0), out var tiempo))
+                            {
+                            <td style="width: 75%;">@tiempo.ToString("#") min</td>
+                            }
+                            else
+                            {
+                                <td>-</td>
+                            }
+                        }
+                    </tr>
                 }
-            </tr>
-        }
-    </tbody>
-</table>
-
+            </tbody>
+        </table>
+    
 }
 
 @code {
