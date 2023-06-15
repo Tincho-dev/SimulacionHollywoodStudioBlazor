@@ -83,7 +83,10 @@
     {
         IngresosEsperados = newIngreso;
     }
-
+    private async Task OnFechaChange(DateTime fecha)
+    {
+        Visitantes = await simulador.VisitantesEstimados(fecha);
+    }
     private void HandleButtonClick()
     {
         // Código para manejar el evento del botón

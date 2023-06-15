@@ -18,6 +18,8 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
         DistribucionesService = distribucionesService;
     }
 
+
+
     public Task<string> Simular(Temporada temporada, int cantidadVisitantesMensuales, int ingresoEsperado)
     {
         var TEVMF = 0;
@@ -213,19 +215,28 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
 
 
     #region Visitantes y tiempos de espera
-    public int CantidadVisitantesMensuales(Temporada temporada)
+    public Task<int> VisitantesEstimados(DateTime fecha)
     {
         int visitantes;
-        if (temporada == Temporada.Alta)
+
+        // Determinar la temporada basándose en el mes
+        if (fecha.Month >= 12 || fecha.Month <= 3) // Diciembre a Marzo = Temporada Alta
         {
             visitantes = 100000;
         }
-        else
+        else if (fecha.Month >= 8 && fecha.Month <= 10) // Agosto a Octubre = Temporada Baja
         {
             visitantes = 90000;
         }
-        return visitantes;
+        else
+        {
+            // Para los meses restantes, puedes elegir un valor por defecto o calcular de alguna manera
+            visitantes = 95000;
+        }
+
+        return Task.FromResult( visitantes);
     }
+
 
     public double CalcularTiempoDeEspera(int numPersonasCola, double tasaLlegada)
     {

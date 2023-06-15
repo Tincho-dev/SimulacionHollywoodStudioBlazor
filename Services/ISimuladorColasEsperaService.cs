@@ -8,4 +8,5 @@ public interface ISimuladorColasEsperaService
     Task<List<DatoEspera>> ObtenerDatosEspera(int numGente);
     double CalcularTiempoDeEspera(int numPersonasCola, double tasaLlegada);
     Task<string> Simular(Temporada temporada, int cantidadVisitantesMensuales, int ingresoEsperado);
+    Task<int> VisitantesEstimados(DateTime fecha);
 }
