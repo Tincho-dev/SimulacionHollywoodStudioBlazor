@@ -1,8 +1,10 @@
-﻿<main>
+﻿@using Services
+@using Model
+@inject ISimuladorColasEsperaService simulador
+
+<main>
     <div class="container"> <!-- CONTAINER DE MAIN-->
-
         <div class="container-principal container-fluid"> <!-- DIV DE CONTAINER PRINCIPAL: CONTIENE COLUMNA DE DATOS,FUNCIÓN Y MAPA -->
-
             <div class="row"> <!-- ROW 2 DE CONTENIDO>: CONTIENE DATOS  -->
                 <div class="col-sm-4">
                     <!-- COL 1 DE INPUTS (UNICA COL DEL ROW)-->
@@ -22,8 +24,6 @@
                         </div>
                     </div> <!--CIERRE CONTAINER DE INPUTS -->
                 </div> <!--CIERRE COL 1 DE INPUTS-->
-
-
                 <div class="col-sm-4" style="text-align: center;">
                     <!--COL 2 DE GRAFICA-->
                     <div class="row">
@@ -32,8 +32,6 @@
                             @*<h4>Precio de la entrada en oferta</h4>*@
                         </div>
                     </div> <!--CIERRE ROW 1 DE ENTRADA EN OFERTA -->
-
-
                     <div class="row">
                         <!--ROW 2 DE IMAGEN -->
                         <div class="col">
@@ -42,9 +40,7 @@
                                 @*<img class="imagen-funcion" src="images/funcion.png" alt="función">*@
                             </div>
                         </div>
-
                     </div> <!--CIERRE ROW 2 DE IMAGEN -->
-
                     <div class="row">
                         <!-- ROW 3 DE CANTIDAD VISITANTES -->
                         <div class="col" style="text-align: center;">
@@ -53,8 +49,6 @@
                     </div> <!--CIERRE ROW 3 DE CANTIDAD VISITANTES -->
                 </div> <!--CIERRE COL 2 DE GRAFICA-->
                 <!--<div class="col"><div class="vertical-separator"></div></div> -->
-
-
                 <div class="col-sm-4">
                     <!-- COL 3 DE MAPA -->
                     @*<ConteinerMapa></ConteinerMapa>*@
@@ -62,28 +56,25 @@
                         border: 3px solid black; align-items: center; justify-content: center;">
                         <TablaTiemposDeEspera></TablaTiemposDeEspera>
                     </div>
-
                 </div> <!--CIERRE COL 3 DE MAPA -->
-
-
-
             </div> <!--CIERRE ROW 2 DE CONTENIDO-->
-
-
         </div> <!-- CIERRE DE CONTAINER PRINCIPAL-->
-
-
     </div> <!-- CIERRE DE CONTAINER DE MAIN-->
 </main>
 
 <Footer></Footer>
 
 @code {
+    public Temporada Temporada { get; set; } = Temporada.Baja;
+    public int Visitantes { get; set; }
+    public int IngresosEsperados { get; set; }
+
     private void HandleButtonClick()
     {
         // Código para manejar el evento del botón
         // Puedes realizar acciones o invocar métodos aquí
         Console.WriteLine("El botón ha sido clickeado");
+        simulador.Simular(Temporada,Visitantes,IngresosEsperados);
     }
 
     protected override async Task OnInitializedAsync()
