@@ -2,6 +2,20 @@
 @using Model
 @inject ISimuladorColasEsperaService simulador
 
+<!-- Colocar este fragmento donde quieras que se muestre el estado -->
+<div class="row">
+    <div class="col">
+        <p>@Estado</p>
+    </div>
+</div>
+
+<!-- Asegúrate de que 'Respuesta' se muestra en algún lugar -->
+<div class="row">
+    <div class="col">
+        <p>@Respuesta</p>
+    </div>
+</div>
+
 <main>
     <div class="container"> <!-- CONTAINER DE MAIN-->
         <div class="container-principal container-fluid"> <!-- DIV DE CONTAINER PRINCIPAL: CONTIENE COLUMNA DE DATOS,FUNCIÓN Y MAPA -->
@@ -11,11 +25,24 @@
                     <div class="contenedor_Datos">
                         <!-- CONTAINER DE INPUTS -->
                         <div class="p-3">
-                            <InputTemporadaFecha></InputTemporadaFecha>
+                            @*<InputTemporadaFecha></InputTemporadaFecha>*@
                             <hr> <!-- SEPARADOR DE FECHA/TEMPORADA Y CANTIDAD DE VISITANTES -->
-                            <InputCantidadDeVisitantes></InputCantidadDeVisitantes>
-                            <InputGanaciaEsperada></InputGanaciaEsperada>
-                            <BotonSimular></BotonSimular>  
+                            @*<InputCantidadDeVisitantes></InputCantidadDeVisitantes>*@
+                            <div class="row d-flex align-items-center justify-content-center">
+                                <div class="col-5 text-left d-flex align-items-center">
+                                    <p>Ingreso esperado: </p>
+                                </div>
+                                <div class="col-7">
+                                    <input @bind="IngresosEsperados" @bind:event="oninput" class="w-100" type="number" name="quantity" min="0" max="100" step="1">
+                                </div>
+                            </div>
+
+                            <hr>
+                            <div class="row">
+                                <div class="col-12">
+                                    <button class="btn btn-primary btn-block rounded-3 w-100" @onclick="HandleButtonClick">Simular</button>
+                                </div>
+                            </div>
                         </div>
                     </div> <!--CIERRE CONTAINER DE INPUTS -->
                 </div> <!--CIERRE COL 1 DE INPUTS-->
@@ -53,10 +80,31 @@
         </div> <!-- CIERRE DE CONTAINER PRINCIPAL-->
     </div> <!-- CIERRE DE CONTAINER DE MAIN-->
 </main>
-
 <Footer></Footer>
 
 @code {
-    
+    public double IngresosEsperados { get; set; }
+    public String Respuesta { get; set; }
+    public String Estado { get; set; } = "Esperando...";
+
+    private async Task HandleButtonClick()
+    {
+        Console.WriteLine("El botón ha sido clickeado");
+        Console.WriteLine(IngresosEsperados);
+
+        Estado = "Simulando...";
+        Respuesta = await simulador.SimularV2((int)IngresosEsperados);
+        Console.WriteLine(Respuesta);
+
+        if (string.IsNullOrEmpty(Respuesta))
+        {
+            Estado = "Error: No se recibió respuesta.";
+        }
+        else
+        {
+            Estado = "Simulación completada.";
+        }
+    }
 }
+
 

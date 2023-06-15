@@ -18,8 +18,6 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
         DistribucionesService = distribucionesService;
     }
 
-
-
     public Task<string> Simular(Temporada temporada, int cantidadVisitantesMensuales, int ingresoEsperado)
     {
         var TEVMF = 0;
@@ -119,7 +117,7 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
             {
                 var visitantesRR = 0; var visitantesMF = 0;
                 u = DistribucionesService.GenerarNumeroAleatorio();
-                var visitantesPorHora = -cantidadVisitantesPorHoraPromedio * Math.Log(u);
+                int visitantesPorHora = (int) (-cantidadVisitantesPorHoraPromedio * Math.Log(u));
                 for (int visitantes = 0; visitantes < visitantesPorHora; visitantes++)
                 {
                     u = DistribucionesService.GenerarNumeroAleatorio();
@@ -142,19 +140,19 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
             }
         }
 
-        int TEP = (int)tiempoEsperaMF.Cast<int>()
+        int tiempoEsperaPromedio = (int)tiempoEsperaRR.Cast<int>()
             .Zip(tiempoEsperaMF.Cast<int>(), (a, b) => a + b)
             .Average();
         var respuesta = string.Empty;
-        if (TEP <= 180)
+        if (tiempoEsperaPromedio <= 180)
         {
-            if (TEP <= 130)//nivel 1 menos de 130 min
+            if (tiempoEsperaPromedio <= 130)//nivel 1 menos de 130 min 3
             {
                 respuesta = @"Cumple con el ingreso
                     esperado y los clientes estan
                     satisfechos con los tiempos de espera";
             }
-            else//nivel 4 entre 130 y 180 min
+            else//nivel 4 entre 130 y 180 min 2
             {
                 respuesta = @"Cumple con el ingreso
                     esperado y los tiempos de
@@ -162,25 +160,25 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
                     (estan entre los registrados en el pasado)";
             }
         }
-        else if (TEP <= 360)//nivel 3 entre 180 y 360 min
+        else if (tiempoEsperaPromedio <= 360)//nivel 3 entre 180 y 360 min 1
         {
             respuesta = @"La gente esta inconforme
                 con el amontonamiento y
                 los altos tiempos de
                 espera";
         }
-        else//nivel 2 mas de 360 min
+        else//nivel 2 mas de 360 min 4
         {
             respuesta = @"La capacidad del establecimiento es
                  insuficiente para lograr el ingreso esperado";
-
         }
         return Task.FromResult(respuesta);
     }
 
     private int TiempoEspera(int visitantes, double tiempoServicio, int capacidad)
     {
-        return (int)(visitantes / capacidad * tiempoServicio);
+        int tiempo = (int)(visitantes / capacidad * tiempoServicio);
+        return tiempo;
     }
 
     public DatoEspera CrearDatoEspera(string nombreAtraccion)
