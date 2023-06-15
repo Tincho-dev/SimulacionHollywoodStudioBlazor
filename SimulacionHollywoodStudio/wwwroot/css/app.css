@@ -116,7 +116,10 @@ main {
     min-height: 530px; /* background-color:blueviolet; */ 
 }
 
-
+.btn-primary.highlighted {
+    background-color: darkblue;
+    /* Agrega otros estilos de resaltado si es necesario */
+}
 
 
 .contenedor_Datos {

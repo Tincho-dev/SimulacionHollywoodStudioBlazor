@@ -16,7 +16,7 @@
                             @*<InputNiveles></InputNiveles>*@
                             <div class="row">
                                 <div class="col-12">
-                                    <button class="btn btn-primary btn-block w-100">Simular</button>
+                                    <button class="btn btn-primary btn-block rounded-3 w-100" @onclick="HandleButtonClick">Simular</button>
                                 </div>
                             </div>
                         </div>
@@ -79,5 +79,18 @@
 <Footer></Footer>
 
 @code {
+    private void HandleButtonClick()
+    {
+        // Código para manejar el evento del botón
+        // Puedes realizar acciones o invocar métodos aquí
+        Console.WriteLine("El botón ha sido clickeado");
+    }
 
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        //tiemposDeEspera = await simulador.ObtenerDatosEspera(90);
+        //OnDateChanged(selectedDate);
+    }
 }
