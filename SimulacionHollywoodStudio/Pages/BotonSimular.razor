@@ -1,5 +1,6 @@
 ﻿@using Services;
 @using Model
+@inject ISimuladorColasEsperaService simulador
 <div class="row">
     <div class="col-12">
         <button class="btn btn-primary btn-block rounded-3 w-100" @onclick="HandleButtonClick">Simular</button>
@@ -7,8 +8,7 @@
 </div>
 
 @code {
-    [CascadingParameter]
-    private ISimuladorColasEsperaService simulador { get; set; }
+    //[CascadingParameter]
 
     public Temporada Temporada { get; set; } = Temporada.Baja;
     public int Visitantes { get; set; }
@@ -35,9 +35,9 @@
 
     private void HandleButtonClick()
     {
-        // Código para manejar el evento del botón
-        // Puedes realizar acciones o invocar métodos aquí
         Console.WriteLine("El botón ha sido clickeado");
-        simulador.Simular(Temporada, Visitantes, (int)IngresosEsperados);
+        //var resp = simulador.Simular(Temporada, Visitantes, (int)IngresosEsperados);
+        var resp = simulador.SimularV2((int)IngresosEsperados);
+        Console.WriteLine(resp.Result);
     }
 }

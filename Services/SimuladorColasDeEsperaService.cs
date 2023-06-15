@@ -97,11 +97,11 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
         return Task.FromResult(respuesta);
     }
 
-    public void SimularV2(int ingresoEsperado)
+    public Task<string> SimularV2(int ingresoEsperado)
     {
         var precioEntrada = 109;
-        int[,] tiempoEsperaRR = new int[30, 15];
-        int[,] tiempoEsperaMF = new int[30, 15];
+        int[,] tiempoEsperaRR = new int[30, 17];
+        int[,] tiempoEsperaMF = new int[30, 17];
         var tiempoServicioRR = 18;
         var tiempoServicioMF = 4.5;
         var capacidadRR = 60;
@@ -109,13 +109,13 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
 
         var cantidadVisitantesMensuales = ingresoEsperado / precioEntrada;
         var cantidadVisitantesDiariosPromedio = cantidadVisitantesMensuales / 30;
-        var cantidadVisitantesPorHoraPromedio = cantidadVisitantesDiariosPromedio / 15;
+        var cantidadVisitantesPorHoraPromedio = cantidadVisitantesDiariosPromedio / 16;
 
-        for (int dia = 1; dia <= 30; dia++)
+        for (int dia = 0; dia <= 29; dia++)
         {
             u = DistribucionesService.GenerarNumeroAleatorio();
             var visitantesDiarios = -cantidadVisitantesDiariosPromedio * Math.Log(u);
-            for (int hora = 8; hora <= 23; hora++)
+            for (int hora = 0; hora <= 16; hora++)
             {
                 var visitantesRR = 0; var visitantesMF = 0;
                 u = DistribucionesService.GenerarNumeroAleatorio();
@@ -175,6 +175,7 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
                  insuficiente para lograr el ingreso esperado";
 
         }
+        return Task.FromResult(respuesta);
     }
 
     private int TiempoEspera(int visitantes, double tiempoServicio, int capacidad)
