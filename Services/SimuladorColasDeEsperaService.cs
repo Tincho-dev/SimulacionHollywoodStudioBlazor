@@ -2,6 +2,9 @@
 using Newtonsoft.Json;
 using Radzen;
 using System;
+using System.Net.WebSockets;
+using System.Runtime.ConstrainedExecution;
+using System.Security.Cryptography;
 
 namespace Services;
 
@@ -15,8 +18,7 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
         DistribucionesService = distribucionesService;
     }
 
-
-    public Task Simular(Temporada temporada, int cantidadVisitantesMensuales, int ingresoEsperado)
+    public Task<string> Simular(Temporada temporada, int cantidadVisitantesMensuales, int ingresoEsperado)
     {
         var TEVMF = 0;
         var TEVRR = 0;
@@ -24,7 +26,8 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
         var TED = 0;
         var Indicador = 0;
         var PE = 109;
-        var VRR = 0; //faltan en el diagrama
+
+        var VRR = 0;
         double TEHRR = 0;
         var VMF = 0;
         double TEHMF = 0;
@@ -33,7 +36,7 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
         for (int i = 0; i < 30; i++)
         {
             u = DistribucionesService.GenerarNumeroAleatorio();
-            var CVD = 22600*(22700 - 22600) * u;
+            var CVD = 22600 * (22700 - 22600) * u;
             for (int j = 8; j < 15; j++)
             {
                 u = DistribucionesService.GenerarNumeroAleatorio();
@@ -62,7 +65,7 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
         var FunciónCalculoIngresos = ingresoEsperado / cantidadVisitantesMensuales * PE;
         Indicador = TED * FunciónCalculoIngresos;
 
-        if(Indicador == ingresoEsperado)
+        if (Indicador == ingresoEsperado)
         {
             if (TED <= 150)
             {
@@ -74,7 +77,7 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
                             insuficiente para lograr el ingreso esperado";
             }
         }
-        else if(Indicador  <= ingresoEsperado / 2)
+        else if (Indicador <= ingresoEsperado / 2)
         {
             respuesta = @"No cumple con el ingreso
                         esperado, se recomienda
@@ -89,9 +92,93 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
                         promociones";
         }
 
-        throw new NotImplementedException();
+        return Task.FromResult(respuesta);
     }
 
+    public void SimularV2(int ingresoEsperado)
+    {
+        var precioEntrada = 109;
+        int[,] tiempoEsperaRR = new int[30, 15];
+        int[,] tiempoEsperaMF = new int[30, 15];
+        var tiempoServicioRR = 18;
+        var tiempoServicioMF = 4.5;
+        var capacidadRR = 60;
+        var capacidadMF = 42;
+
+        var cantidadVisitantesMensuales = ingresoEsperado / precioEntrada;
+        var cantidadVisitantesDiariosPromedio = cantidadVisitantesMensuales / 30;
+        var cantidadVisitantesPorHoraPromedio = cantidadVisitantesDiariosPromedio / 15;
+
+        for (int dia = 1; dia <= 30; dia++)
+        {
+            u = DistribucionesService.GenerarNumeroAleatorio();
+            var visitantesDiarios = -cantidadVisitantesDiariosPromedio * Math.Log(u);
+            for (int hora = 8; hora <= 23; hora++)
+            {
+                var visitantesRR = 0; var visitantesMF = 0;
+                u = DistribucionesService.GenerarNumeroAleatorio();
+                var visitantesPorHora = -cantidadVisitantesPorHoraPromedio * Math.Log(u);
+                for (int visitantes = 0; visitantes < visitantesPorHora; visitantes++)
+                {
+                    u = DistribucionesService.GenerarNumeroAleatorio();
+                    if (u <= 0.75)
+                    {
+                        u = DistribucionesService.GenerarNumeroAleatorio();
+                        if (u <= 0.3)
+                        {
+                            visitantesRR++;
+                        }
+                        else
+                        {
+                            visitantesMF++;
+                        }
+                    }
+                }//visitantes++
+                tiempoEsperaRR[dia, hora] = TiempoEspera(visitantesRR, tiempoServicioRR, capacidadRR);
+                tiempoEsperaMF[dia, hora] = TiempoEspera(visitantesMF, tiempoServicioMF, capacidadMF);
+                //visitantesDiarios = 0;
+            }
+        }
+
+        int TEP = (int)tiempoEsperaMF.Cast<int>()
+            .Zip(tiempoEsperaMF.Cast<int>(), (a, b) => a + b)
+            .Average();
+        var respuesta = string.Empty;
+        if (TEP <= 180)
+        {
+            if (TEP <= 130)
+            {
+                respuesta = @"Cumple con el ingreso
+                    esperado y los clientes estan
+                    satisfechos con los tiempos de espera";
+            }
+            else
+            {
+                respuesta = @"Cumple con el ingreso
+                    esperado y los tiempos de
+                    espera son razonables
+                    (estan entre los registrados en el pasado)";
+            }
+        }
+        else if (TEP <= 360)
+        {
+            respuesta = @"La gente esta inconforme
+                con el amontonamiento y
+                los altos tiempos de
+                espera";
+        }
+        else
+        {
+            respuesta = @"La capacidad del establecimiento es
+                 insuficiente para lograr el ingreso esperado";
+
+        }
+    }
+
+    private int TiempoEspera(int visitantes, double tiempoServicio, int capacidad)
+    {
+        return (int)(visitantes / capacidad * tiempoServicio);
+    }
 
     public DatoEspera CrearDatoEspera(string nombreAtraccion)
     {
@@ -111,7 +198,7 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
 
                     var tasaFinal = (tasaHora + tasaMes + tasaDia) / 3;
 
-                    tasasDeLlegada.Add(new DateTime(year, mes, dia, hora, 0, 0), 313/tasaFinal);
+                    tasasDeLlegada.Add(new DateTime(year, mes, dia, hora, 0, 0), 313 / tasaFinal);
                 }
             }
         }
