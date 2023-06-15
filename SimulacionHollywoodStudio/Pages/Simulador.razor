@@ -67,21 +67,29 @@
 @code {
     public Temporada Temporada { get; set; } = Temporada.Baja;
     public int Visitantes { get; set; }
-    public int IngresosEsperados { get; set; }
+    public double IngresosEsperados { get; set; }
+
+    private void HandleTemporadaChange(Temporada newTemporada)
+    {
+        Temporada = newTemporada;
+    }
+
+    private void HandleCantidadVisitantesChange(int newCantidad)
+    {
+        Visitantes = newCantidad;
+    }
+
+    private void HandleIngresoEsperadoChange(double newIngreso)
+    {
+        IngresosEsperados = newIngreso;
+    }
 
     private void HandleButtonClick()
     {
         // Código para manejar el evento del botón
         // Puedes realizar acciones o invocar métodos aquí
         Console.WriteLine("El botón ha sido clickeado");
-        simulador.Simular(Temporada,Visitantes,IngresosEsperados);
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-
-        //tiemposDeEspera = await simulador.ObtenerDatosEspera(90);
-        //OnDateChanged(selectedDate);
+        simulador.Simular(Temporada, Visitantes, (int) IngresosEsperados);
     }
 }
+

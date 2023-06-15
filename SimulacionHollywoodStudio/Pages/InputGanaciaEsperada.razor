@@ -1,11 +1,9 @@
-﻿
-<div class="row d-flex align-items-center justify-content-center">
+﻿<div class="row d-flex align-items-center justify-content-center">
     <div class="col-5 text-left d-flex align-items-center">
         <p>Ingreso esperado: </p>
     </div>
     <div class="col-7">
-        @*<p>@ingreso</p>*@
-        <input class="w-100" type="number" name="quantity" min="0" max="100" step="1" value="0">
+        <input @bind="ingreso" @bind:event="oninput" class="w-100" type="number" name="quantity" min="0" max="100" step="1">
     </div>
 </div>
 
@@ -14,4 +12,13 @@
 @code {
     [Parameter]
     public double ingreso { get; set; }
+
+    [Parameter]
+    public EventCallback<double> ingresoChanged { get; set; }
+
+    private async Task oninput(ChangeEventArgs e)
+    {
+        ingreso = double.Parse(e.Value.ToString());
+        await ingresoChanged.InvokeAsync(ingreso);
+    }
 }

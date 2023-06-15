@@ -12,12 +12,12 @@
         <p>Visitantes</p>
     </div>
     <div class="col-7">
-        <input type="text" class="form-control" id="" name="showVisitants" readonly>
+        <input @bind="value" type="text" class="form-control" id="" name="showVisitants" readonly>
     </div>
 </div>
 
 <div class="row">
-    <div class="col" >
+    <div class="col">
         <div class="rz-p-6 rz-text-align-center">
             <RadzenSlider @bind-Value=@value TValue="int" />
         </div>
@@ -28,10 +28,21 @@
 
 @code {
     double u;
-    int value = 33;
+    [Parameter]
+    public int value { get; set; }
+
+    [Parameter]
+    public EventCallback<int> valueChanged { get; set; }
+
     protected override Task OnInitializedAsync()
     {
         u = DistribucionesService.GenerarNumeroAleatorio();
         return base.OnInitializedAsync();
+    }
+
+    private async Task OnSliderChange(int newValue)
+    {
+        value = newValue;
+        await valueChanged.InvokeAsync(value);
     }
 }
