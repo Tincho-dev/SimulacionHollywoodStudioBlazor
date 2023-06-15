@@ -3,6 +3,16 @@ namespace Services;
 
 public class GeneradorService : IGeneradorService
 {
+    public double CongruencialMixto(int semilla, int constanteAditiva, int constanteMultiplicativa,
+        int modulo, int digitos)
+    {
+        semilla = (constanteMultiplicativa * semilla + constanteAditiva) % modulo;
+        return (
+            Math.Round(
+                value: (double) semilla / modulo,
+                digits: digitos,
+                mode: MidpointRounding.ToZero));//trunca
+    }
     #region Metodos de Generacion
     public List<double> ParteCentralDelCuadrado(int digitosDeseados, int semilla, int totalDeNumerosaGenerar)
     {
@@ -50,16 +60,6 @@ public class GeneradorService : IGeneradorService
         return u;
     }
 
-    public double CongruencialMixto(int semilla, int constanteAditiva, int constanteMultiplicativa,
-        int modulo, int digitos)
-    {
-        semilla = (constanteMultiplicativa * semilla + constanteAditiva) % modulo;
-        return (
-            Math.Round(
-                value: (double) semilla / modulo,
-                digits: digitos,
-                mode: MidpointRounding.ToZero));//trunca
-    }
 
     public List<double> CongruencialMultiplicativo(int semilla, int constanteMultiplicativa, int modulo, int totalDeNumerosaGenerar, int digitos)
     {

@@ -148,13 +148,13 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
         var respuesta = string.Empty;
         if (TEP <= 180)
         {
-            if (TEP <= 130)
+            if (TEP <= 130)//nivel 1 menos de 130 min
             {
                 respuesta = @"Cumple con el ingreso
                     esperado y los clientes estan
                     satisfechos con los tiempos de espera";
             }
-            else
+            else//nivel 4 entre 130 y 180 min
             {
                 respuesta = @"Cumple con el ingreso
                     esperado y los tiempos de
@@ -162,14 +162,14 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
                     (estan entre los registrados en el pasado)";
             }
         }
-        else if (TEP <= 360)
+        else if (TEP <= 360)//nivel 3 entre 180 y 360 min
         {
             respuesta = @"La gente esta inconforme
                 con el amontonamiento y
                 los altos tiempos de
                 espera";
         }
-        else
+        else//nivel 2 mas de 360 min
         {
             respuesta = @"La capacidad del establecimiento es
                  insuficiente para lograr el ingreso esperado";
