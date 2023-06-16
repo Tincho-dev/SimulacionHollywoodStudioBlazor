@@ -64,74 +64,84 @@ a, .btn-link {
     }
 
 /*Estilos componenete de simulacion*/
-.contenedor_Tabla {
-    /* VS no está leyendo este estilo nose porque, pusimos un style */
-    border: 3px solid black;
-    border-radius: 20px;
-    height: 300px; /* Establece la altura máxima del contenedor */
-    overflow-y: scroll; /* Añade un scroll vertical al contenedor */
-    display: flex; /* Aplica un sistema de cajas flexibles al contenedor */
-    align-items: center; /* Centra verticalmente los elementos dentro del contenedor */
-    justify-content: center; /* Centra horizontalmente los elementos dentro del contenedor */
+
+/* Estilos para el modo claro */
+body.light-mode {
+    background-color: #f2f1f7 !important;
+    color: black !important;
+    display: flex;
+    flex-direction: column;
+    min-height:100vh !important;
 }
 
-
-.container-titulo {
-    text-align: center;
-    padding-top: 10px;
+/* Estilos para el modo oscuro */
+body.dark-mode {
+    background-color: black !important;
+    color: white !important;
 }
 
-.container-principal {
-    text-align: center;
-}
-
-.titulo {
-    background-color: lightgray;
-}
-
-.imagen-funcion {
-    height: 200px;
-    width: auto;
-}
-
-.imagen-mapa {
-    height: 380px;
-    width: 400px;
-}
-
-.vertical-separator {
-    border-left: 1px solid rgb(170, 169, 169);
-    height: 425px;
-    width: 10%;
-}
-
-body {
-    margin: 0;
-    padding: 0;
-    min-height: 100vh; /* Asegura que la altura del body ocupe toda la pantalla */
-    flex-direction: column; /* Utilizamos flexbox para alinear el footer al final de la página */  
-}
-
-main {
-    min-height: 530px; /* background-color:blueviolet; */ 
-}
-
-.btn-primary.highlighted {
-    background-color: darkblue;
-    /* Agrega otros estilos de resaltado si es necesario */
-}
-
-
-.contenedor_Datos {
-    border: 3px solid black;
-    border-radius: 20px;
-    background-color:white;
-}
-
+/* Navbar en modo claro */
 .navbar {
-    /* No funciona */
     border-bottom: 3px solid black; /* Estilo de borde deseado */
     border-radius: 5px; /* Opcional: añade esquinas redondeadas al borde */
     background-color: white;
 }
 
+/* Navbar en modo oscuro */
+body.dark-mode .navbar {
+    border-bottom: 3px solid white; /* Estilo de borde deseado */
+    border-radius: 5px; /* Opcional: añade esquinas redondeadas al borde */
+    background-color: #1c1c1e;
+}
+
+nav a {
+    /* Estilos para la etiqueta <a> dentro de <nav> */
+    color: black;
+    text-decoration: none;
+    font-size: 35px;
+
+}
+
+footer {
+    background-color: white;
+    width: 100%;
+    border-top: 3px solid black; /* Estilo de borde deseado */
+    border-left: 3px solid black; /* Estilo de borde deseado */
+    border-right: 3px solid black; /* Estilo de borde deseado */
+    border-radius: 10px 10px 0 0; /* Opcional: añade esquinas redondeadas al borde */
+    margin-top: auto !important;
+}
+
+#app {
+    min-height: 100vh;
+}
+
+.contenedor_Datos {
+    border: 3px solid black;
+    border-radius: 20px;
+    background-color: white;
+}
+
+body.dark-mode .contenedor_Datos {
+    border: 3px solid white;
+    border-radius: 20px;
+    background-color: #1c1c1e;
+}
+
+.contenedor_Tabla {
+    background-color: white;
+    border: 3px solid black;
+    border-radius: 20px;
+    
+    height: 200px; /* Establece la altura máxima del contenedor */
+    overflow-y: scroll; /* Añade un scroll vertical al contenedor */
+    align-items: center !important; /* Centra verticalmente los elementos dentro del contenedor */
+    justify-content: center !important; /* Centra horizontalmente los elementos dentro del contenedor */
+ 
+}
+
+
+
+body.dark-mode .contenedor_Tabla {
+    background-color: #1c1c1e;
+}

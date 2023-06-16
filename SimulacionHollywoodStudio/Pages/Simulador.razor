@@ -3,58 +3,66 @@
 @inject ISimuladorColasEsperaService simulador
 
 <main>
-    <div class="container"> <!-- CONTAINER DE MAIN-->
-        <div class="container-principal container-fluid"> <!-- DIV DE CONTAINER PRINCIPAL: CONTIENE COLUMNA DE DATOS,FUNCIÓN Y MAPA -->
-            <div class="row"> <!-- ROW 2 DE CONTENIDO>: CONTIENE DATOS  -->
-                <div class="col-sm-4">
-                    <!-- COL 1 DE INPUTS (UNICA COL DEL ROW)-->
-                    <div class="contenedor_Datos">
-                        <!-- CONTAINER DE INPUTS -->
-                        <div class="p-3">
-                            <InputTemporadaFecha></InputTemporadaFecha>
-                            <hr> <!-- SEPARADOR DE FECHA/TEMPORADA Y CANTIDAD DE VISITANTES -->
-                            <InputCantidadDeVisitantes></InputCantidadDeVisitantes>
-                            <InputGanaciaEsperada></InputGanaciaEsperada>
-                            <BotonSimular></BotonSimular>  
-                        </div>
-                    </div> <!--CIERRE CONTAINER DE INPUTS -->
-                </div> <!--CIERRE COL 1 DE INPUTS-->
-                <div class="col-sm-4" style="text-align: center;">
-                    <!--COL 2 DE GRAFICA-->
+    <div class="container-fluid text-center">
+        <!-- CONTAINER DE MAIN-->
+        <div class="row">
+            <!-- Todo el contenido de la vista main -->
+
+            <div class="col-sm-3 p-0">
+                <div class="p-3 mb-1 contenedor_Datos container-fluids">
+                    <div class="">
+                        <InputTemporadaFecha></InputTemporadaFecha>
+                        <hr> <!-- SEPARADOR DE FECHA/TEMPORADA Y CANTIDAD DE VISITANTES -->
+                        <InputCantidadDeVisitantes></InputCantidadDeVisitantes>
+                        <InputGanaciaEsperada></InputGanaciaEsperada>
+                        <BotonSimular></BotonSimular>
+                    </div>
+                </div>
+            </div> <!--CIERRE COL 1 DE INPUTS-->
+
+            <div class="col-sm-4 p-1">
+                <!-- COL DE FUNCION -->
+                <div class="p-2 mb-1 contenedor_Datos container-fluids">
                     <div class="row">
-                        <!--ROW 1 DE ENTRADA EN OFERTA -->
-                        <div class="col" style="text-align: center;">
+                        <div class="col" >
+                            <h3>Función</h3>
                         </div>
-                    </div> <!--CIERRE ROW 1 DE ENTRADA EN OFERTA -->
+                    </div> 
                     <div class="row">
-                        <!--ROW 2 DE IMAGEN -->
+                        <!--ROW DE FUNCION -->
                         <div class="col">
-                            <div class="container">
                                 <ConteinerFuncion></ConteinerFuncion>
-                            </div>
-                        </div>
-                    </div> <!--CIERRE ROW 2 DE IMAGEN -->
-                    <div class="row">
-                        <!-- ROW 3 DE CANTIDAD VISITANTES -->
-                        <div class="col" style="text-align: center;">
                             <p>Cantidad de Visitantes</p>
                         </div>
-                    </div> <!--CIERRE ROW 3 DE CANTIDAD VISITANTES -->
-                </div> <!--CIERRE COL 2 DE GRAFICA-->
-                <div class="col-sm-4">
-                    <!-- COL 3 DE MAPA -->
-                    @*<ConteinerMapa></ConteinerMapa>*@
-                    <div class="p-3" style="height: 400px; overflow-y: scroll; border-radius: 20px;
-                        border: 3px solid black; align-items: center; justify-content: center;">
-                        <TablaTiemposDeEspera></TablaTiemposDeEspera>
-                    </div>
-                </div> <!--CIERRE COL 3 DE MAPA -->
-            </div> <!--CIERRE ROW 2 DE CONTENIDO-->
-        </div> <!-- CIERRE DE CONTAINER PRINCIPAL-->
+                    </div> <!--CIERRE ROW DE FUNCION -->
+                </div>
+                <div class="row" style="padding-left:15px; padding-right:15px;">
+                        <!--ROW DE FUNCION -->
+                        <div class="col contenedor_Tabla">
+                            <TablaTiemposDeEspera></TablaTiemposDeEspera>
+                        </div>
+                    </div> <!--CIERRE ROW DE FUNCION -->
+
+
+                
+            </div> <!--CIERRE COL DE FUNCION -->
+
+            <div class="col-sm-5 p-0">
+                <div class="p-2 contenedor_Datos">
+                <!-- COL 3 DE MAPA -->
+                <ConteinerMapa></ConteinerMapa>
+                    @*<TablaTiemposDeEspera></TablaTiemposDeEspera>*@
+                </div>
+            </div> <!--CIERRE COL 3 DE MAPA -->
+
+
+
+        </div> <!-- CIERRE DE ROW QUE CONTIENE A TODO EL MAIN-->
+
     </div> <!-- CIERRE DE CONTAINER DE MAIN-->
 </main>
 
-<Footer></Footer>
+
 
 @code {
     

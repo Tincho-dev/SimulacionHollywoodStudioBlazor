@@ -5,17 +5,25 @@
 @inject ISimuladorColasEsperaService simulador
 <RadzenHeading Size="H3" Text="Tabla Tiempos De Espera"></RadzenHeading>
 
-<div style="display: flex; align-items: center; margin-bottom: 10px;">
-    <RadzenButton Icon="arrow_left" Click="@(args => ChangeDate(-1))"></RadzenButton>
+
+
+<div>
+    <RadzenButton Icon="arrow_left" Click="@(args => ChangeDate(-1))"
+                  Style="background-color: #1b6ec2;"></RadzenButton>
     <RadzenDatePicker @bind-Value="selectedDate" Change="@(args => OnDateChanged(args))" Style="margin: 0 10px;"></RadzenDatePicker>
-    <RadzenButton Icon="arrow_right" Click="@(args => ChangeDate(1))"></RadzenButton>
+    <RadzenButton Icon="arrow_right" Click="@(args => ChangeDate(1))"
+                  Style="background-color:#1b6ec2;"></RadzenButton>
 </div>
 
 
 @if (tiemposDeEsperaFiltrados != null && tiemposDeEsperaFiltrados.Any())
 {
     var hours = tiemposDeEsperaFiltrados.First().TiempoEspera.Keys.Select(k => k.Hour).Distinct().OrderBy(h => h);
-        <table class="table">
+    <table class="table">
+        <colgroup>
+            <col style="width: auto;">
+            <col style="width: auto;">
+        </colgroup>
             <thead>
                 <tr>
                     <th>Hora</th>
@@ -34,7 +42,7 @@
                         {
                             if (dato.TiempoEspera.TryGetValue(new DateTime(selectedDate.Year, selectedDate.Month, selectedDate.Day, hour, 0, 0), out var tiempo))
                             {
-                            <td style="width: 75%;">@tiempo.ToString("#") min</td>
+                            <td>@tiempo.ToString("#") min</td>
                             }
                             else
                             {
