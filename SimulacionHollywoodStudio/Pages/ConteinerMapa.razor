@@ -1,4 +1,7 @@
-﻿<div class="row">
+﻿@page "/mapa"
+@inject IJSRuntime JSRuntime
+
+<div class="row">
     <!-- ROW 1 DE STAR WARS TITULO -->
     <div class="col" style="text-align: center;">
         <h3>Star Wars Galaxy's Edge</h3>
@@ -8,10 +11,41 @@
 <div class="row">
     <!-- ROW 2 DE MAPA DE STAR WARS -->
     <div class="col">
+
         @*<MapaParque></MapaParque>*@
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1655.507072451875!2d-81.56202990584423!3d28.354783379215014!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88dd7fe45079b82f%3A0x9dfa3efd78a5d66d!2sStar%20Wars%3A%20Rise%20of%20the%20Resistance!5e1!3m2!1sen!2sar!4v1686941169396!5m2!1sen!2sar" width="480" height="440" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        @*<div id="map" @ref="mapContainer"></div>*@
+       
+        @* width="480" height="440"*@
+        @*<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1655.507072451875!2d-81.56202990584423!3d28.354783379215014!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88dd7fe45079b82f%3A0x9dfa3efd78a5d66d!2sStar%20Wars%3A%20Rise%20of%20the%20Resistance!5e1!3m2!1sen!2sar!4v1686941169396!5m2!1sen!2sar" width="480" height="440" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>*@
+       
+        <div class="image-container">
+            <img style="width:480px;height:440px; border-radius:20px;" src="Images/ImagenMapa.jpg" alt="">
+            <div class="comment-bubble comment-MF">
+                <p>TE en MF: </p>
+            </div>
+            <div class="comment-bubble comment-RR">
+                <p>TE en RR: </p>
+            </div>
+
+        </div>
+
+    
     </div> <!--CIERRE COL 1 DE MAPA DE STAR WARS  -->
 </div> <!--CIERRE ROW 2 DE MAPA DE STAR WARS  -->
 @code {
 
+    //private ElementReference mapContainer;
+
+    //protected override async Task OnAfterRenderAsync(bool firstRender)
+    //{
+    //    if (firstRender)
+    //    {
+    //        await LoadMapAsync();
+    //    }
+    //}
+
+    //private async Task LoadMapAsync()
+    //{
+    //    await JSRuntime.InvokeVoidAsync("loadMap", mapContainer);
+    //}
 }

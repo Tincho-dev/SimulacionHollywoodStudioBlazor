@@ -71,7 +71,9 @@ body.light-mode {
     color: black !important;
     display: flex;
     flex-direction: column;
-    min-height:100vh !important;
+    min-height: 100vh !important;
+    overflow: hidden;
+    position: fixed;
 }
 
 /* Estilos para el modo oscuro */
@@ -113,7 +115,7 @@ footer {
 }
 
 #app {
-    min-height: 100vh;
+    min-height: 100vh !important;
 }
 
 .contenedor_Datos {
@@ -144,4 +146,33 @@ body.dark-mode .contenedor_Datos {
 
 body.dark-mode .contenedor_Tabla {
     background-color: #1c1c1e;
+}
+
+.image-container {
+    position: relative;
+    display: inline-block;
+}
+
+.comment-bubble {
+    position: absolute;
+    background-color: rgba(241, 241, 241, 0.5);
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+    transform: translate(-50%, -50%);
+}
+
+    .comment-bubble:hover {
+        background-color: #f1f1f1;
+    }
+
+.comment-MF {
+    top: 75%; /* Posición vertical del globo */
+    left: 40%; /* Posición horizontal del globo */
+}
+
+.comment-RR {
+    top: 25%; /* Posición vertical del globo */
+    left: 82%; /* Posición horizontal del globo */
 }

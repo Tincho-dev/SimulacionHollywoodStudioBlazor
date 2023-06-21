@@ -136,12 +136,14 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
                         }
                     }
                 }//visitantes++
+                // tiempo deespera de cada hora de cada día
+                // este contenido se tiene que mostrar en la tabla de la vista
                 tiempoEsperaRR[dia, hora] = TiempoEspera(visitantesRR, tiempoServicioRR, capacidadRR);
                 tiempoEsperaMF[dia, hora] = TiempoEspera(visitantesMF, tiempoServicioMF, capacidadMF);
                 //visitantesDiarios = 0;
             }
         }
-
+        // Tiempo de Espera Promedio
         int TEP = (int)tiempoEsperaMF.Cast<int>()
             .Zip(tiempoEsperaMF.Cast<int>(), (a, b) => a + b)
             .Average();
