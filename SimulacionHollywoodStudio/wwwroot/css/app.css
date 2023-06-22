@@ -72,8 +72,7 @@ body.light-mode {
     display: flex;
     flex-direction: column;
     min-height: 100vh !important;
-    overflow: hidden;
-    position: fixed;
+    
 }
 
 /* Estilos para el modo oscuro */
@@ -107,10 +106,8 @@ nav a {
 footer {
     background-color: white;
     width: 100%;
-    border-top: 3px solid black; /* Estilo de borde deseado */
-    border-left: 3px solid black; /* Estilo de borde deseado */
-    border-right: 3px solid black; /* Estilo de borde deseado */
-    border-radius: 10px 10px 0 0; /* Opcional: añade esquinas redondeadas al borde */
+    border: 3px solid black; /* Estilo de borde deseado */
+    border-radius: 10px; /* Opcional: añade esquinas redondeadas al borde */
     margin-top: auto !important;
 }
 
@@ -175,4 +172,9 @@ body.dark-mode .contenedor_Tabla {
 .comment-RR {
     top: 25%; /* Posición vertical del globo */
     left: 82%; /* Posición horizontal del globo */
+}
+
+.contenedorRespuesta {
+    display: none;
+    transition:0.3s ease all;
 }

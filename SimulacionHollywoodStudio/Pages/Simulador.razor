@@ -2,8 +2,15 @@
 @using Model
 @inject ISimuladorColasEsperaService simulador
 
-<main>
-    <div class="container-fluid text-center">
+
+
+<main class="animate__animated animate__fadeIn">
+    <div class="contenedor_Datos text-center contenedorRespuesta mb-1" style="transition: height 0.5s ease;">
+        <p>@Estado</p>
+        <p>@Respuesta</p>
+    </div>
+
+    <div class="container-fluid text-center" style="transition: height 0.5s ease;">
         <!-- CONTAINER DE MAIN-->
         <div class="row">
             <!-- Todo el contenido de la vista main -->
@@ -14,9 +21,24 @@
                         <InputTemporadaFecha></InputTemporadaFecha>
                         <hr> <!-- SEPARADOR DE FECHA/TEMPORADA Y CANTIDAD DE VISITANTES -->
                         <InputCantidadDeVisitantes></InputCantidadDeVisitantes>
-                        <InputGanaciaEsperada></InputGanaciaEsperada>
-                        <BotonSimular></BotonSimular>
+                        <div class="row d-flex align-items-center justify-content-center">
+                            <div class="col-5 text-left d-flex align-items-center">
+                                <p>Ingreso esperado: </p>
+                            </div>
+                            <div class="col-7">
+                                <input @bind="IngresosEsperados" @bind:event="oninput" class="w-100" type="number" name="quantity" min="0" max="100" step="1">
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <button class="btn btn-primary btn-block rounded-3 w-100 botondeSimular" @onclick="HandleButtonClick">Simular</button>
+                            </div>
+                        </div>
                     </div>
+
                 </div>
             </div> <!--CIERRE COL 1 DE INPUTS-->
 
@@ -63,6 +85,28 @@
 
 
 @code {
-    
+    public double IngresosEsperados { get; set; }
+    public String Respuesta { get; set; }
+    public String Estado { get; set; } = "Esperando...";
+
+    private async Task HandleButtonClick()
+    {
+        Console.WriteLine("El botón ha sido clickeado");
+        Console.WriteLine(IngresosEsperados);
+
+        Estado = "Simulando...";
+        Respuesta = await simulador.SimularV2((int)IngresosEsperados);
+        Console.WriteLine(Respuesta);
+
+        if (string.IsNullOrEmpty(Respuesta))
+        {
+            Estado = "Error: No se recibió respuesta.";
+        }
+        else
+        {
+            Estado = "Simulación completada.";
+        }
+
+    }
 }
 
