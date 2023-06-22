@@ -175,6 +175,6 @@ body.dark-mode .contenedor_Tabla {
 }
 
 .contenedorRespuesta {
-    display: none;
+    display: block;
     transition:0.3s ease all;
 }
