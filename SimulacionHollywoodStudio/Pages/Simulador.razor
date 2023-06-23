@@ -9,7 +9,7 @@
         <!-- CONTAINER DE MAIN-->
         <div class="row">
             <!-- Todo el contenido de la vista main -->
-            <div class="col-sm-3 p-0">
+            <div class="col-sm-4 p-0">
                 <div class="p-3 mb-3 contenedor_Datos container-fluids">
                     
                     <div class="row">
@@ -120,10 +120,35 @@
                     
                     </div> <!--CIERRE ROW DE FUNCION -->
             </div> <!--CIERRE COL DE FUNCION -->
-            <div class="col-sm-5 p-0">
+            <div class="col-sm-4 p-0">
                 <div class="p-2 contenedor_Datos d-none d-md-block">
                 <!-- COL 3 DE MAPA -->
-                <ConteinerMapa></ConteinerMapa>
+                @*<ConteinerMapa></ConteinerMapa>*@
+                    <div class="row">
+                        <!-- ROW 1 DE STAR WARS TITULO -->
+                        <div class="col" style="text-align: center;">
+                            <h3>Star Wars Galaxy's Edge</h3>
+                        </div> <!--CIERRE COL 1 DE STAR WARS TITULO -->
+                    </div> <!--CIERRE ROW 1 DE STAR WARS TITULO -->
+
+                    <div class="row">
+                        <!-- ROW 2 DE MAPA DE STAR WARS -->
+                        <div class="col">
+
+                            <div class="image-container">
+                                <img style="width:380px;height:420px; border-radius:20px;" src="Images/ImagenMapa.jpg" alt="">
+                                @if(TiemposDeEspera.Count() !=0){
+                                <div class="comment-bubble comment-MF">
+                                    <p>TE en MF: @TiemposDeEspera.ElementAt(0).TiempoEspera.ToString()</p>
+                                </div>
+                                <div class="comment-bubble comment-RR">
+                                    <p>TE en RR: @TiemposDeEspera.ElementAt(1).ToString()</p>
+                                </div>
+                                }
+                            </div>
+
+                        </div> <!--CIERRE COL 1 DE MAPA DE STAR WARS  -->
+                    </div> <!--CIERRE ROW 2 DE MAPA DE STAR WARS  -->
                 </div>
             </div> <!--CIERRE COL 3 DE MAPA -->
         </div> <!-- CIERRE DE ROW QUE CONTIENE A TODO EL MAIN-->
@@ -157,6 +182,7 @@
             selectedDate = date.Value;
             tiemposDeEsperaFiltrados = TiemposDeEspera.Where(d => d.TiempoEspera.Keys.Any(k => k.Date == selectedDate.Date));
         }
+
     }
 
     void ChangeDate(int days)
@@ -188,7 +214,7 @@
     {
         if (firstRender)
         {
-            await JSRuntime.InvokeVoidAsync("plotFunction");
+            await JSRuntime.InvokeVoidAsync("plotFunction",3000000);
         }
     }
 }
