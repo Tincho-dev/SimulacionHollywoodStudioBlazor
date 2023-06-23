@@ -167,6 +167,7 @@
     public IEnumerable<DatoEspera> TiemposDeEspera { get; set; } = new List<DatoEspera>();
     IEnumerable<DatoEspera> tiemposDeEsperaFiltrados;
     DateTime selectedDate = DateTime.Today;
+    const int PrecioEntrada = 109;
 
     protected override async Task OnInitializedAsync()
     {
@@ -208,6 +209,7 @@
         }
 
         await OnSimulationComplete.InvokeAsync(simulacionResult.Item2);
+        await JSRuntime.InvokeVoidAsync("plotFunction", TiempoEsperaPromedio);
         OnDateChanged(selectedDate);
     }
 
@@ -215,7 +217,7 @@
     {
         if (firstRender)
         {
-            await JSRuntime.InvokeVoidAsync("plotFunction",3000000);
+            await JSRuntime.InvokeVoidAsync("plotFunction");
         }
     }
 }

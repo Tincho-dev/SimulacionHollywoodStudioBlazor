@@ -1,46 +1,57 @@
-﻿window.plotFunction = (inputX) => {
-    // Crear un array para tus datos x e y
-    let x = [];
-    let y = [];
+﻿var myChart;
 
-    for (let i = 0; i <= 10000000; i += 1000000) {
-        x.push(i);
-        y.push(109 * i);
+window.plotFunction = (inputX) => {
+    // Crear un array para tus datos
+    let data = [];
+
+    for (let i = 0; i <= 500; i += 50) {
+        data.push({ x: i, y: 161 * i });
     }
 
+    inputX = Math.round(inputX);
     // Calcular el valor y correspondiente para inputX
-    let inputY = 109 * inputX;
+    let inputY = 161 * inputX;
 
     // Obtener el elemento canvas del DOM
     let ctx = document.getElementById('myChart').getContext('2d');
 
+    // Destruir el gráfico existente si existe
+    if (myChart) {
+        myChart.destroy();
+    }
+
     // Crear el gráfico
-    let myChart = new Chart(ctx, {
+    myChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: x, // eje X
             datasets: [
                 {
-                    label: 'y = 109*x',
-                    data: y, // eje Y
-                    borderColor: 'rgba(255,99,132,1)', // color de la línea
-                    borderWidth: 1 // ancho de la línea
+                    label: 'y = 161*x',
+                    data: data,
+                    borderColor: 'rgba(255,99,132,1)',
+                    borderWidth: 1
                 },
                 {
                     label: `Punto (${inputX}, ${inputY})`,
-                    data: [{ x: inputX, y: inputY }], // eje X, Y para el punto
-                    borderColor: 'rgba(0,123,255,1)', // color de la línea
-                    backgroundColor: 'rgba(0,123,255,1)', // color de fondo para el punto
-                    borderWidth: 1, // ancho de la línea
-                    pointRadius: 5, // tamaño del punto
-                    fill: false, // para no llenar el área bajo la curva
-                    showLine: false // para no mostrar la línea entre los puntos (solo hay uno en este caso)
+                    data: [{ x: inputX, y: inputY }],
+                    borderColor: 'rgba(0,123,255,1)',
+                    backgroundColor: 'rgba(0,123,255,1)',
+                    borderWidth: 1,
+                    pointRadius: 5,
+                    fill: false,
+                    showLine: false
                 }
             ]
         },
         options: {
             scales: {
+                x: {
+                    type: 'linear',
+                    position: 'bottom',
+                    beginAtZero: true
+                },
                 y: {
+                    type: 'linear',
                     beginAtZero: true
                 }
             }
