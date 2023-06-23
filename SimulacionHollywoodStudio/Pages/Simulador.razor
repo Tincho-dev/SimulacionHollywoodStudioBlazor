@@ -139,10 +139,10 @@
                                 <img style="width:380px;height:420px; border-radius:20px;" src="Images/ImagenMapa.jpg" alt="">
                                 @if(TiemposDeEspera.Count() !=0){
                                 <div class="comment-bubble comment-MF">
-                                    <p>TE en MF: @TiemposDeEspera.ElementAt(0).TiempoEspera.ToString()</p>
+                                    <p>TE en MF: @TiemposDeEspera.FirstOrDefault(a => a.Nombre == "RR")?.TiempoEspera.FirstOrDefault().Value</p>
                                 </div>
                                 <div class="comment-bubble comment-RR">
-                                    <p>TE en RR: @TiemposDeEspera.ElementAt(1).ToString()</p>
+                                    <p>TE en RR: @TiemposDeEspera.FirstOrDefault(a => a.Nombre == "MF")?.TiempoEspera.FirstOrDefault().Value</p>
                                 </div>
                                 }
                             </div>
