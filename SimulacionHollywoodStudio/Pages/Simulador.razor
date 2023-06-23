@@ -200,7 +200,7 @@
                 .Where(k => k.Key.Date == selectedDate.Date)
                 .DefaultIfEmpty()
                 .Average(t => t.Value) ?? 0;
-                TiempoEsperaPromedio = (TiempoEsperaPromedioMF + TiempoEsperaPromedioRR) / 2;
+                TiempoEsperaPromedio = (TiempoEsperaPromedioMF + TiempoEsperaPromedioRR);
                 await JSRuntime.InvokeVoidAsync("plotFunction", TiempoEsperaPromedio);
             }
         }

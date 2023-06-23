@@ -1,6 +1,4 @@
-﻿var myChart;
-
-window.plotFunction = (inputX) => {
+﻿window.plotFunction = (inputX) => {
     // Crear un array para tus datos
     let data = [];
 
@@ -44,6 +42,9 @@ window.plotFunction = (inputX) => {
             ]
         },
         options: {
+            animation: {
+                duration: 0 // deshabilita la animación
+            },
             scales: {
                 x: {
                     type: 'linear',
@@ -53,6 +54,33 @@ window.plotFunction = (inputX) => {
                 y: {
                     type: 'linear',
                     beginAtZero: true
+                }
+            },
+            plugins: {
+                annotation: {
+                    annotations: {
+                        line1: {
+                            type: 'line',
+                            xMin: 180,
+                            xMax: 180,
+                            borderColor: 'rgb(255, 99, 132)',
+                            borderWidth: 2
+                        },
+                        line2: {
+                            type: 'line',
+                            xMin: 360,
+                            xMax: 360,
+                            borderColor: 'rgb(75, 192, 192)',
+                            borderWidth: 2
+                        },
+                        line3: {
+                            type: 'line',
+                            xMin: 130,
+                            xMax: 130,
+                            borderColor: 'rgb(153, 102, 255)',
+                            borderWidth: 2
+                        }
+                    }
                 }
             }
         }
