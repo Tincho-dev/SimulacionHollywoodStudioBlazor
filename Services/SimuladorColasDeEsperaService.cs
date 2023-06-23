@@ -14,13 +14,13 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
         DistribucionesService = distribucionesService;
     }
 
-    public async Task<(string, IEnumerable<DatoEspera>)> Simular(int ingresoEsperado)
+    public async Task<(string, IEnumerable<DatoEspera>, double)> Simular(int ingresoEsperado)
     {
         TiemposPorAtraccion = await SimularTiemposDeEspera(ingresoEsperado);
         double tiempoEsperaPromedio = TiemposPorAtraccion.SelectMany(d => d.TiempoEspera.Values).Average();
 
         var respuesta = GetRespuesta(tiempoEsperaPromedio);
-        return (respuesta, TiemposPorAtraccion);
+        return (respuesta, TiemposPorAtraccion, tiempoEsperaPromedio);
     }
 
     public IEnumerable<DatoEspera> GetDatoEsperas()
@@ -73,7 +73,7 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
                             visitantesMF++;
                         }
                     }
-                    await Task.Delay(1);
+                    //await Task.Delay(1);
                 }//visitantes++
 
                 // tiempo de espera de cada hora de cada día

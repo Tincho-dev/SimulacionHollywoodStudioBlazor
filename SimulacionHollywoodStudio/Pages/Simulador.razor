@@ -53,7 +53,56 @@
                 <div class="row" style="padding-left:15px; padding-right:15px;">
                         <!--ROW DE FUNCION -->
                         <div class="col contenedor_Tabla">
-                        <TablaTiemposDeEspera tiemposDeEspera="@tiemposDeEspera"></TablaTiemposDeEspera>
+                        <RadzenHeading Size="H3" Text="Tabla Tiempos De Espera"></RadzenHeading>
+
+                        <div>
+                            <RadzenButton Icon="arrow_left" Click="@(args => ChangeDate(-1))"
+                                          Style="background-color: #1b6ec2;"></RadzenButton>
+                            <RadzenDatePicker @bind-Value="selectedDate" Change="@(args => OnDateChanged(args))" Style="margin: 0 10px;"></RadzenDatePicker>
+                            <RadzenButton Icon="arrow_right" Click="@(args => ChangeDate(1))"
+                                          Style="background-color:#1b6ec2;"></RadzenButton>
+                        </div>
+
+
+                        @if (tiemposDeEsperaFiltrados != null && tiemposDeEsperaFiltrados.Any())
+                        {
+                            var hours = tiemposDeEsperaFiltrados.First().TiempoEspera.Keys.Select(k => k.Hour).Distinct().OrderBy(h => h);
+                            <table class="table">
+                                <colgroup>
+                                    <col style="width: auto;">
+                                    <col style="width: auto;">
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th>Hora</th>
+                                        @foreach (var dato in tiemposDeEsperaFiltrados)
+                                        {
+                                            <th>@dato.Nombre</th>
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var hour in hours)
+                                    {
+                                        <tr>
+                                            <td>@hour:00</td>
+                                            @foreach (var dato in tiemposDeEsperaFiltrados)
+                                            {
+                                                if (dato.TiempoEspera.TryGetValue(new DateTime(selectedDate.Year, selectedDate.Month, selectedDate.Day, hour, 0, 0), out var tiempo))
+                                                {
+                                                    <td>@tiempo.ToString("#") min</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>-</td>
+                                                }
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+
+                        }
                     </div>
                     </div> <!--CIERRE ROW DE FUNCION -->
             </div> <!--CIERRE COL DE FUNCION -->
@@ -61,7 +110,6 @@
                 <div class="p-2 contenedor_Datos">
                 <!-- COL 3 DE MAPA -->
                 <ConteinerMapa></ConteinerMapa>
-                    @*<TablaTiemposDeEspera></TablaTiemposDeEspera>*@
                 </div>
             </div> <!--CIERRE COL 3 DE MAPA -->
         </div> <!-- CIERRE DE ROW QUE CONTIENE A TODO EL MAIN-->
@@ -74,16 +122,41 @@
     [Parameter]
     public EventCallback<IEnumerable<DatoEspera>> OnSimulationComplete { get; set; }
     public double IngresosEsperados { get; set; }
-    public String Respuesta { get; set; }
+    public double TiempoEsperaPromedio { get; set; }
+    public String Respuesta { get; set; } = String.Empty;
     public String Estado { get; set; } = "Esperando...";
-    public IEnumerable<DatoEspera> tiemposDeEspera { get; set; }
+    public IEnumerable<DatoEspera> TiemposDeEspera { get; set; } = new List<DatoEspera>();
+    IEnumerable<DatoEspera> tiemposDeEsperaFiltrados;
+    DateTime selectedDate = DateTime.Today;
 
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        OnDateChanged(selectedDate);
+    }
+
+    void OnDateChanged(DateTime? date)
+    {
+        if (date.HasValue)
+        {
+            selectedDate = date.Value;
+            tiemposDeEsperaFiltrados = TiemposDeEspera.Where(d => d.TiempoEspera.Keys.Any(k => k.Date == selectedDate.Date));
+        }
+    }
+
+    void ChangeDate(int days)
+    {
+        selectedDate = selectedDate.AddDays(days);
+        OnDateChanged(selectedDate);
+    }
     private async Task HandleButtonClick()
     {
         Estado = "Simulando...";
         var simulacionResult = await simulador.Simular((int)IngresosEsperados);
         Respuesta = simulacionResult.Item1;
-        tiemposDeEspera = simulacionResult.Item2;
+        TiemposDeEspera = simulacionResult.Item2;
+        TiempoEsperaPromedio = simulacionResult.Item3;
 
         if (string.IsNullOrEmpty(Respuesta))
         {
@@ -93,6 +166,7 @@
         {
             Estado = "Simulación completada.";
         }
+
         await OnSimulationComplete.InvokeAsync(simulacionResult.Item2);
     }
 }
