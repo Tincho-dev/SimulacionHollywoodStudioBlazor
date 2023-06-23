@@ -3,7 +3,7 @@
     let x = [];
     let y = [];
 
-    for (let i = 0; i <= 10; i++) {
+    for (let i = 0; i <= 10000000; i+=1000000) {
         x.push(i);
         y.push(161 * i);
     }

@@ -17,10 +17,11 @@ public class DistribucionesService : IDistribucionesService
     }
 
     public double GenerarNumeroAleatorio()
-        => GeneradorService.CongruencialMixto(
-            Semilla++,
-            ConstanteAditiva,
-            ConstanteMultiplicativa,
-            Modulo,
-            Digitos);
+        //=> GeneradorService.CongruencialMixto(
+        //    Semilla++,
+        //    ConstanteAditiva,
+        //    ConstanteMultiplicativa,
+        //    Modulo,
+        //    Digitos);
+        => new Random().NextDouble();
 }
