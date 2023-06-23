@@ -95,7 +95,7 @@
     private async Task HandleButtonClick()
     {
         Estado = "Simulando...";
-        var simulacionResult = await simulador.SimularV2((int)IngresosEsperados);
+        var simulacionResult = await simulador.Simular((int)IngresosEsperados);
         Respuesta = simulacionResult.Item1;
         tiemposDeEspera = simulacionResult.Item2;
 

@@ -1,11 +1,5 @@
 ﻿using Model;
-using Newtonsoft.Json;
 using Radzen;
-using System;
-using System.Diagnostics;
-using System.Net.WebSockets;
-using System.Runtime.ConstrainedExecution;
-using System.Security.Cryptography;
 
 namespace Services;
 
@@ -20,7 +14,103 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
         DistribucionesService = distribucionesService;
     }
 
-    public Task<string> Simular(Temporada temporada, int cantidadVisitantesMensuales, int ingresoEsperado)
+    public async Task<(string, IEnumerable<DatoEspera>)> Simular(int ingresoEsperado)
+    {
+        TiemposPorAtraccion = await SimularTiemposDeEspera(ingresoEsperado);
+        double tiempoEsperaPromedio = TiemposPorAtraccion.SelectMany(d => d.TiempoEspera.Values).Average();
+
+        var respuesta = GetRespuesta(tiempoEsperaPromedio);
+        return (respuesta, TiemposPorAtraccion);
+    }
+
+    public IEnumerable<DatoEspera> GetDatoEsperas()
+    {
+        return TiemposPorAtraccion;
+    }
+
+    public Task<List<DatoEspera>> SimularTiemposDeEspera(int ingresoEsperado)
+    {
+        var precioEntrada = 109;
+        int[,] tiempoEsperaRR = new int[30, 17];
+        int[,] tiempoEsperaMF = new int[30, 17];
+        var tiempoServicioRR = 18;
+        var tiempoServicioMF = 4.5;
+        var capacidadRR = 60;
+        var capacidadMF = 42;
+
+        var cantidadVisitantesMensuales = ingresoEsperado / precioEntrada;
+        var cantidadVisitantesDiariosPromedio = cantidadVisitantesMensuales / 30;
+        var cantidadVisitantesPorHoraPromedio = cantidadVisitantesDiariosPromedio / 16;
+
+        var datosEsperaRR = new DatoEspera { Nombre = "RR", TiempoEspera = new Dictionary<DateTime, double>() };
+        var datosEsperaMF = new DatoEspera { Nombre = "MF", TiempoEspera = new Dictionary<DateTime, double>() };
+
+        int año = DateTime.Now.Year;    
+        int mes = DateTime.Now.Month;
+
+        for (int dia = 0; dia <= 29; dia++)
+        {
+            u = DistribucionesService.GenerarNumeroAleatorio();
+            var visitantesDiarios = -cantidadVisitantesDiariosPromedio * Math.Log(u);
+            for (int hora = 0; hora <= 16; hora++)
+            {
+                var visitantesRR = 0; var visitantesMF = 0;
+                u = DistribucionesService.GenerarNumeroAleatorio();
+                int visitantesPorHora = (int)(-cantidadVisitantesPorHoraPromedio * Math.Log(u));
+                for (int visitantes = 0; visitantes < visitantesPorHora; visitantes++)
+                {
+                    u = DistribucionesService.GenerarNumeroAleatorio();
+                    if (u <= 0.75)
+                    {
+                        u = DistribucionesService.GenerarNumeroAleatorio();
+                        if (u <= 0.3)
+                        {
+                            visitantesRR++;
+                        }
+                        else
+                        {
+                            visitantesMF++;
+                        }
+                    }
+                }//visitantes++
+
+                // tiempo de espera de cada hora de cada día
+                // este contenido se tiene que mostrar en la tabla de la vista
+                datosEsperaRR.TiempoEspera.Add(new DateTime(año, mes, dia + 1, hora, 0, 0), TiempoEspera(visitantesRR, tiempoServicioRR, capacidadRR));
+                datosEsperaMF.TiempoEspera.Add(new DateTime(año, mes, dia + 1, hora, 0, 0), TiempoEspera(visitantesMF, tiempoServicioMF, capacidadMF));
+            }
+        }
+
+        return Task.FromResult(new List<DatoEspera> { datosEsperaRR, datosEsperaMF });
+    }
+    public int TiempoEspera(int visitantes, double tiempoServicio, int capacidad)
+    {
+        int tiempo = (int)(visitantes / capacidad * tiempoServicio);
+        return tiempo;
+    }
+
+    private string GetRespuesta(double tiempoEsperaPromedio)
+    {
+        if (tiempoEsperaPromedio <= 130)
+        {
+            return @"Cumple con el ingreso esperado y los clientes estan satisfechos con los tiempos de espera";
+        }
+        else if (tiempoEsperaPromedio <= 180)
+        {
+            return @"Cumple con el ingreso esperado y los tiempos de espera son razonables (estan entre los registrados en el pasado)";
+        }
+        else if (tiempoEsperaPromedio <= 360)
+        {
+            return @"La gente esta inconforme con el amontonamiento y los altos tiempos de espera";
+        }
+        else
+        {
+            return @"La capacidad del establecimiento es insuficiente para lograr el ingreso esperado";
+        }
+    }
+
+    #region Metodo Obsoleto
+    public Task<string> SimularObsoleto(Temporada temporada, int cantidadVisitantesMensuales, int ingresoEsperado)
     {
         var TEVMF = 0;
         var TEVRR = 0;
@@ -95,180 +185,6 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
         }
 
         return Task.FromResult(respuesta);
-    }
-
-    public async Task<(string, IEnumerable<DatoEspera>)> SimularV2(int ingresoEsperado)
-    {
-        TiemposPorAtraccion = await SimularTiemposDeEspera(ingresoEsperado);
-        double tiempoEsperaPromedio = TiemposPorAtraccion.SelectMany(d => d.TiempoEspera.Values).Average();
-
-        var respuesta = GetRespuesta(tiempoEsperaPromedio);
-        return (respuesta, TiemposPorAtraccion);
-    }
-
-    private string GetRespuesta(double tiempoEsperaPromedio)
-    {
-        if (tiempoEsperaPromedio <= 130)
-        {
-            return @"Cumple con el ingreso esperado y los clientes estan satisfechos con los tiempos de espera";
-        }
-        else if (tiempoEsperaPromedio <= 180)
-        {
-            return @"Cumple con el ingreso esperado y los tiempos de espera son razonables (estan entre los registrados en el pasado)";
-        }
-        else if (tiempoEsperaPromedio <= 360)
-        {
-            return @"La gente esta inconforme con el amontonamiento y los altos tiempos de espera";
-        }
-        else
-        {
-            return @"La capacidad del establecimiento es insuficiente para lograr el ingreso esperado";
-        }
-    }
-
-    public Task<List<DatoEspera>> SimularTiemposDeEspera(int ingresoEsperado)
-    {
-        var precioEntrada = 109;
-        int[,] tiempoEsperaRR = new int[30, 17];
-        int[,] tiempoEsperaMF = new int[30, 17];
-        var tiempoServicioRR = 18;
-        var tiempoServicioMF = 4.5;
-        var capacidadRR = 60;
-        var capacidadMF = 42;
-
-        var cantidadVisitantesMensuales = ingresoEsperado / precioEntrada;
-        var cantidadVisitantesDiariosPromedio = cantidadVisitantesMensuales / 30;
-        var cantidadVisitantesPorHoraPromedio = cantidadVisitantesDiariosPromedio / 16;
-
-        var datosEsperaRR = new DatoEspera { Nombre = "RR", TiempoEspera = new Dictionary<DateTime, double>() };
-        var datosEsperaMF = new DatoEspera { Nombre = "MF", TiempoEspera = new Dictionary<DateTime, double>() };
-
-        int año = DateTime.Now.Year;    
-        int mes = DateTime.Now.Month;
-
-        for (int dia = 0; dia <= 29; dia++)
-        {
-            u = DistribucionesService.GenerarNumeroAleatorio();
-            var visitantesDiarios = -cantidadVisitantesDiariosPromedio * Math.Log(u);
-            for (int hora = 0; hora <= 16; hora++)
-            {
-                var visitantesRR = 0; var visitantesMF = 0;
-                u = DistribucionesService.GenerarNumeroAleatorio();
-                int visitantesPorHora = (int)(-cantidadVisitantesPorHoraPromedio * Math.Log(u));
-                for (int visitantes = 0; visitantes < visitantesPorHora; visitantes++)
-                {
-                    u = DistribucionesService.GenerarNumeroAleatorio();
-                    if (u <= 0.75)
-                    {
-                        u = DistribucionesService.GenerarNumeroAleatorio();
-                        if (u <= 0.3)
-                        {
-                            visitantesRR++;
-                        }
-                        else
-                        {
-                            visitantesMF++;
-                        }
-                    }
-                }//visitantes++
-
-                // tiempo de espera de cada hora de cada día
-                // este contenido se tiene que mostrar en la tabla de la vista
-                datosEsperaRR.TiempoEspera.Add(new DateTime(año, mes, dia + 1, hora, 0, 0), TiempoEspera(visitantesRR, tiempoServicioRR, capacidadRR));
-                datosEsperaMF.TiempoEspera.Add(new DateTime(año, mes, dia + 1, hora, 0, 0), TiempoEspera(visitantesMF, tiempoServicioMF, capacidadMF));
-            }
-        }
-
-        return Task.FromResult(new List<DatoEspera> { datosEsperaRR, datosEsperaMF });
-    }
-
-
-    private int TiempoEspera(int visitantes, double tiempoServicio, int capacidad)
-    {
-        int tiempo = (int)(visitantes / capacidad * tiempoServicio);
-        return tiempo;
-    }
-
-    public DatoEspera CrearDatoEspera(string nombreAtraccion)
-    {
-        var tasasDeLlegada = new Dictionary<DateTime, double>();
-        var year = 2023;
-
-        for (int mes = 1; mes <= 12; mes++)
-        {
-            for (int dia = 1; dia <= DateTime.DaysInMonth(year, mes); dia++)
-            {
-                var fecha = new DateTime(year, mes, dia);
-                for (int hora = 8; hora <= 23; hora++)
-                {
-                    var tasaHora = TasasDeLlegadaData.TasasPorHora.ContainsKey(hora.ToString()) ? TasasDeLlegadaData.TasasPorHora[hora.ToString()] : 0;
-                    var tasaMes = TasasDeLlegadaData.TasasPorMes.ContainsKey(mes.ToString()) ? TasasDeLlegadaData.TasasPorMes[mes.ToString()] : 0;
-                    var tasaDia = TasasDeLlegadaData.TasasPorDia.ContainsKey(((int)fecha.DayOfWeek).ToString()) ? TasasDeLlegadaData.TasasPorDia[((int)fecha.DayOfWeek).ToString()] : 0;
-
-                    var tasaFinal = (tasaHora + tasaMes + tasaDia) / 3;
-
-                    tasasDeLlegada.Add(new DateTime(year, mes, dia, hora, 0, 0), 313 / tasaFinal);
-                }
-            }
-        }
-
-        return new DatoEspera
-        {
-            Nombre = nombreAtraccion,
-            Posicion = new GoogleMapPosition(), // Aquí puedes asignar la posición real
-            TiempoEspera = tasasDeLlegada
-        };
-    }
-
-
-    #region Visitantes y tiempos de espera
-    public Task<int> VisitantesEstimados(DateTime fecha)
-    {
-        int visitantes;
-
-        // Determinar la temporada basándose en el mes
-        if (fecha.Month >= 12 || fecha.Month <= 3) // Diciembre a Marzo = Temporada Alta
-        {
-            visitantes = 100000;
-        }
-        else if (fecha.Month >= 8 && fecha.Month <= 10) // Agosto a Octubre = Temporada Baja
-        {
-            visitantes = 90000;
-        }
-        else
-        {
-            // Para los meses restantes, puedes elegir un valor por defecto o calcular de alguna manera
-            visitantes = 95000;
-        }
-
-        return Task.FromResult( visitantes);
-    }
-
-
-    public double CalcularTiempoDeEspera(int numPersonasCola, double tasaLlegada)
-    {
-        // Convertir la tasa de llegada a personas por minuto
-        double tasaLlegadaMinuto = tasaLlegada;
-
-        // Utilizar la fórmula de Little para calcular el tiempo de espera promedio
-        double tiempoEspera = numPersonasCola / tasaLlegadaMinuto;
-
-        return tiempoEspera;
-    }
-
-    public Task<List<DatoEspera>> ObtenerDatosEspera(int numGente)
-    {
-        List<DatoEspera> list = new()
-        {
-            CrearDatoEspera("Rise of the Resistance")
-        //CrearDatoEspera("Rise of the Resistance");
-        };
-        return Task.FromResult(list);
-    }
-
-    public IEnumerable<DatoEspera> GetDatoEsperas()
-    {
-        return TiemposPorAtraccion;
     }
     #endregion
 }

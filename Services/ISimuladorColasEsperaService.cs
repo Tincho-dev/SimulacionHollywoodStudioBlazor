@@ -4,11 +4,7 @@ namespace Services;
 
 public interface ISimuladorColasEsperaService
 {
-    DatoEspera CrearDatoEspera(string nombreAtraccion);
-    Task<List<DatoEspera>> ObtenerDatosEspera(int numGente);
-    double CalcularTiempoDeEspera(int numPersonasCola, double tasaLlegada);
-    Task<int> VisitantesEstimados(DateTime fecha);
-    Task<string> Simular(Temporada temporada, int cantidadVisitantesMensuales, int ingresoEsperado);
-    Task<(string, IEnumerable<DatoEspera>)> SimularV2(int ingresoEsperado);
+    int TiempoEspera(int visitantes, double tiempoServicio, int capacidad);
+    Task<(string, IEnumerable<DatoEspera>)> Simular(int ingresoEsperado);
     IEnumerable<DatoEspera> GetDatoEsperas();
 }
