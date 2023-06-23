@@ -72,7 +72,7 @@ body.light-mode {
     display: flex;
     flex-direction: column;
     min-height: 100vh !important;
-    
+    overflow-y: hidden;
 }
 
 /* Estilos para el modo oscuro */
@@ -132,7 +132,7 @@ body.dark-mode .contenedor_Datos {
     border: 3px solid black;
     border-radius: 20px;
     
-    height: 200px; /* Establece la altura máxima del contenedor */
+    height: 380px; /* Establece la altura máxima del contenedor */
     overflow-y: scroll; /* Añade un scroll vertical al contenedor */
     align-items: center !important; /* Centra verticalmente los elementos dentro del contenedor */
     justify-content: center !important; /* Centra horizontalmente los elementos dentro del contenedor */

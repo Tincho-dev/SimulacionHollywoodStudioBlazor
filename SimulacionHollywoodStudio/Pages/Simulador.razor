@@ -3,62 +3,73 @@
 @inject ISimuladorColasEsperaService simulador
 
 <main class="animate__animated animate__fadeIn">
-    <div class="contenedor_Datos text-center contenedorRespuesta mb-1" style="transition: height 0.5s ease; display:block;">
-        <p>@Estado</p>
-        <p>@Respuesta</p>
-    </div>
+    
     <div class="container-fluid text-center" style="transition: height 0.5s ease;">
         <!-- CONTAINER DE MAIN-->
         <div class="row">
             <!-- Todo el contenido de la vista main -->
             <div class="col-sm-3 p-0">
-                <div class="p-3 mb-1 contenedor_Datos container-fluids">
-                    <div class="">
-                        <InputTemporadaFecha></InputTemporadaFecha>
-                        <hr> <!-- SEPARADOR DE FECHA/TEMPORADA Y CANTIDAD DE VISITANTES -->
-                        <InputCantidadDeVisitantes></InputCantidadDeVisitantes>
-                        <div class="row d-flex align-items-center justify-content-center">
-                            <div class="col-5 text-left d-flex align-items-center">
-                                <p>Ingreso esperado: </p>
-                            </div>
-                            <div class="col-7">
-                                <input @bind="IngresosEsperados" @bind:event="oninput" class="w-100" type="number" name="quantity" min="0" max="100" step="1">
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-12">
-                                <button class="btn btn-primary btn-block rounded-3 w-100 botondeSimular" @onclick="HandleButtonClick">Simular</button>
-                            </div>
+                <div class="p-3 mb-3 contenedor_Datos container-fluids">
+                    
+                    <div class="row">
+                        <div class="col">
+                            <h3>Ingreso esperado</h3>
                         </div>
                     </div>
-                </div>
-            </div> <!--CIERRE COL 1 DE INPUTS-->
-            <div class="col-sm-4 p-1">
-                <!-- COL DE FUNCION -->
-                <div class="p-2 mb-1 contenedor_Datos container-fluids">
+                        
+                    <div class="row d-flex align-items-center justify-content-center">
+                        <div class="col-5 text-left d-flex align-items-center">
+                            <p>Ingreso esperado: </p>
+                        </div>
+                        <div class="col-7">
+                            <input @bind="IngresosEsperados" @bind:event="oninput" class="w-100" type="number" name="quantity" min="0" max="100" step="1">
+                        </div>
+                    </div>
+                    <hr>
                     <div class="row">
-                        <div class="col" >
+                        <div class="col-12">
+                            <button class="btn btn-primary btn-block rounded-3 w-100 botondeSimular" @onclick="HandleButtonClick">Simular</button>
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <div class="p-1 mb-1 contenedor_Datos container-fluids" style="height:270px;">
+                    <div class="row">
+                        <div class="col">
                             <h3>Función</h3>
                         </div>
-                    </div> 
+                    </div>
                     <div class="row">
                         <!--ROW DE FUNCION -->
                         <div class="col">
-                                <ConteinerFuncion></ConteinerFuncion>
+                            <ConteinerFuncion></ConteinerFuncion>
                             <p>Cantidad de Visitantes</p>
                         </div>
                     </div> <!--CIERRE ROW DE FUNCION -->
                 </div>
+
+            </div> <!--CIERRE COL 1 DE INPUTS-->
+
+
+            <div class="col-sm-4 p-1">
+                <!-- COL DE FUNCION -->
+                
                 <div class="row" style="padding-left:15px; padding-right:15px;">
                         <!--ROW DE FUNCION -->
-                        <div class="col contenedor_Tabla">
+                    <div class="contenedor_Datos text-center contenedorRespuesta mb-2" 
+                    style="transition: height 0.5s ease; display:block; min-height:100px">
+                        <p>@Estado</p>
+                        <p>@Respuesta</p>
+                    </div>
+
+                    <div class="col contenedor_Tabla">
                         <RadzenHeading Size="H3" Text="Tabla Tiempos De Espera"></RadzenHeading>
 
                         <div>
                             <RadzenButton Icon="arrow_left" Click="@(args => ChangeDate(-1))"
                                           Style="background-color: #1b6ec2;"></RadzenButton>
-                            <RadzenDatePicker @bind-Value="selectedDate" Change="@(args => OnDateChanged(args))" Style="margin: 0 10px;"></RadzenDatePicker>
+                            <RadzenDatePicker @bind-Value="selectedDate" DateFormat="dd/MM" Change="@(args => OnDateChanged(args))" Style="margin: 0 10px;"></RadzenDatePicker>
                             <RadzenButton Icon="arrow_right" Click="@(args => ChangeDate(1))"
                                           Style="background-color:#1b6ec2;"></RadzenButton>
                         </div>
@@ -104,10 +115,12 @@
 
                         }
                     </div>
+
+                    
                     </div> <!--CIERRE ROW DE FUNCION -->
             </div> <!--CIERRE COL DE FUNCION -->
             <div class="col-sm-5 p-0">
-                <div class="p-2 contenedor_Datos">
+                <div class="p-2 contenedor_Datos d-none d-md-block">
                 <!-- COL 3 DE MAPA -->
                 <ConteinerMapa></ConteinerMapa>
                 </div>
