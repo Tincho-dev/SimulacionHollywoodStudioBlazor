@@ -1,10 +1,25 @@
-﻿window.plotFunction = (inputX) => {
+﻿var myChart;
+
+window.plotFunction = (inputX) => {
     // Crear un array para tus datos
     let data = [];
 
     for (let i = 0; i <= 500; i += 50) {
         data.push({ x: i, y: 161 * i });
     }
+
+    let datosNivel1 = [];
+    datosNivel1.push({ x: 130, y: 0 * 130 });
+    datosNivel1.push({ x: 130, y: 161 * 130 });
+
+    let datosNivel2 = [];
+    datosNivel2.push({ x: 180, y: 0 * 180 });
+    datosNivel2.push({ x: 180, y: 161 * 180 });
+
+    let datosNivel3 = [];
+    datosNivel3.push({ x: 360, y: 0 * 360 });
+    datosNivel3.push({ x: 360, y: 161 * 360 });
+
 
     inputX = Math.round(inputX);
     // Calcular el valor y correspondiente para inputX
@@ -26,14 +41,41 @@
                 {
                     label: 'y = 161*x',
                     data: data,
-                    borderColor: 'rgba(255,99,132,1)',
-                    borderWidth: 1
+                    borderColor: 'green', // Cambio de color a verde
+                    borderWidth: 1,
+                    pointRadius: 0, // Deshabilitar los puntos
+                    fill: false, // No rellenar el área bajo la curva
+                    showLine: true // Mostrar solo la línea
+                }, {
+                    label: 'Nivel 1',
+                    data: datosNivel1,
+                    borderColor: 'red', // Cambio de color a rojo
+                    borderWidth: 1,
+                    pointRadius: 0, // Deshabilitar los puntos
+                    fill: false, // No rellenar el área bajo la curva
+                    showLine: true // Mostrar solo la línea
+                }, {
+                    label: 'Nivel 2',
+                    data: datosNivel2,
+                    borderColor: 'red', // Cambio de color a rojo
+                    borderWidth: 1,
+                    pointRadius: 0, // Deshabilitar los puntos
+                    fill: false, // No rellenar el área bajo la curva
+                    showLine: true // Mostrar solo la línea
+                }, {
+                    label: 'Nivel 3',
+                    data: datosNivel3,
+                    borderColor: 'red', // Cambio de color a rojo
+                    borderWidth: 1,
+                    pointRadius: 0, // Deshabilitar los puntos
+                    fill: false, // No rellenar el área bajo la curva
+                    showLine: true // Mostrar solo la línea
                 },
                 {
                     label: `Punto (${inputX}, ${inputY})`,
                     data: [{ x: inputX, y: inputY }],
-                    borderColor: 'rgba(0,123,255,1)',
-                    backgroundColor: 'rgba(0,123,255,1)',
+                    borderColor: 'blue', // Cambio de color a azul
+                    backgroundColor: 'blue', // Cambio de color a azul
                     borderWidth: 1,
                     pointRadius: 5,
                     fill: false,
@@ -54,33 +96,6 @@
                 y: {
                     type: 'linear',
                     beginAtZero: true
-                }
-            },
-            plugins: {
-                annotation: {
-                    annotations: {
-                        line1: {
-                            type: 'line',
-                            xMin: 180,
-                            xMax: 180,
-                            borderColor: 'rgb(255, 99, 132)',
-                            borderWidth: 2
-                        },
-                        line2: {
-                            type: 'line',
-                            xMin: 360,
-                            xMax: 360,
-                            borderColor: 'rgb(75, 192, 192)',
-                            borderWidth: 2
-                        },
-                        line3: {
-                            type: 'line',
-                            xMin: 130,
-                            xMax: 130,
-                            borderColor: 'rgb(153, 102, 255)',
-                            borderWidth: 2
-                        }
-                    }
                 }
             }
         }

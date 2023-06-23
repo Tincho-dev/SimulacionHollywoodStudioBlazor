@@ -5,30 +5,14 @@
 @inject IJSRuntime JSRuntime
 
 
-<Simulador OnSimulationComplete="HandleSimulationComplete"></Simulador>
+<Simulador></Simulador>
 <Footer></Footer>
 
-
-@*<h1>@u</h1>*@
-
 @code{
-
-    public double u { get; set; }
     public IEnumerable<DatoEspera> tiemposDeEspera { get; set; }
 
     protected override Task OnInitializedAsync()
     {
-        u = DistribucionesService.GenerarNumeroAleatorio();//GU(u)
-        u = DistribucionesService.GenerarNumeroAleatorio();//GU(u)
-        u = DistribucionesService.GenerarNumeroAleatorio();//GU(u)
-        u = DistribucionesService.GenerarNumeroAleatorio();//GU(u)
-
         return base.OnInitializedAsync();
-    }
-
-    private async Task HandleSimulationComplete(IEnumerable<DatoEspera> newTiemposDeEspera)
-    {
-        tiemposDeEspera = newTiemposDeEspera;
-        // Realiza cualquier otra actualización necesaria aquí.
     }
 }
