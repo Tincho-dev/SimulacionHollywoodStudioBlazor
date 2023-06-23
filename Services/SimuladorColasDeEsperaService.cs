@@ -28,7 +28,7 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
         return TiemposPorAtraccion;
     }
 
-    public Task<List<DatoEspera>> SimularTiemposDeEspera(int ingresoEsperado)
+    public async Task<List<DatoEspera>> SimularTiemposDeEspera(int ingresoEsperado)
     {
         var precioEntrada = 109;
         int[,] tiempoEsperaRR = new int[30, 17];
@@ -57,6 +57,7 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
                 var visitantesRR = 0; var visitantesMF = 0;
                 u = DistribucionesService.GenerarNumeroAleatorio();
                 int visitantesPorHora = (int)(-cantidadVisitantesPorHoraPromedio * Math.Log(u));
+                
                 for (int visitantes = 0; visitantes < visitantesPorHora; visitantes++)
                 {
                     u = DistribucionesService.GenerarNumeroAleatorio();
@@ -72,6 +73,7 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
                             visitantesMF++;
                         }
                     }
+                    await Task.Delay(1);
                 }//visitantes++
 
                 // tiempo de espera de cada hora de cada día
@@ -81,7 +83,7 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
             }
         }
 
-        return Task.FromResult(new List<DatoEspera> { datosEsperaRR, datosEsperaMF });
+        return new List<DatoEspera> { datosEsperaRR, datosEsperaMF };
     }
     public int TiempoEspera(int visitantes, double tiempoServicio, int capacidad)
     {

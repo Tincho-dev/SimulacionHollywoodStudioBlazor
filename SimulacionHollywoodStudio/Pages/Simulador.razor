@@ -2,19 +2,15 @@
 @using Model
 @inject ISimuladorColasEsperaService simulador
 
-
-
 <main class="animate__animated animate__fadeIn">
     <div class="contenedor_Datos text-center contenedorRespuesta mb-1" style="transition: height 0.5s ease; display:block;">
         <p>@Estado</p>
         <p>@Respuesta</p>
     </div>
-
     <div class="container-fluid text-center" style="transition: height 0.5s ease;">
         <!-- CONTAINER DE MAIN-->
         <div class="row">
             <!-- Todo el contenido de la vista main -->
-
             <div class="col-sm-3 p-0">
                 <div class="p-3 mb-1 contenedor_Datos container-fluids">
                     <div class="">
@@ -29,19 +25,15 @@
                                 <input @bind="IngresosEsperados" @bind:event="oninput" class="w-100" type="number" name="quantity" min="0" max="100" step="1">
                             </div>
                         </div>
-
                         <hr>
-
                         <div class="row">
                             <div class="col-12">
                                 <button class="btn btn-primary btn-block rounded-3 w-100 botondeSimular" @onclick="HandleButtonClick">Simular</button>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div> <!--CIERRE COL 1 DE INPUTS-->
-
             <div class="col-sm-4 p-1">
                 <!-- COL DE FUNCION -->
                 <div class="p-2 mb-1 contenedor_Datos container-fluids">
@@ -64,11 +56,7 @@
                         <TablaTiemposDeEspera tiemposDeEspera="@tiemposDeEspera"></TablaTiemposDeEspera>
                     </div>
                     </div> <!--CIERRE ROW DE FUNCION -->
-
-
-                
             </div> <!--CIERRE COL DE FUNCION -->
-
             <div class="col-sm-5 p-0">
                 <div class="p-2 contenedor_Datos">
                 <!-- COL 3 DE MAPA -->
@@ -76,9 +64,7 @@
                     @*<TablaTiemposDeEspera></TablaTiemposDeEspera>*@
                 </div>
             </div> <!--CIERRE COL 3 DE MAPA -->
-
         </div> <!-- CIERRE DE ROW QUE CONTIENE A TODO EL MAIN-->
-
     </div> <!-- CIERRE DE CONTAINER DE MAIN-->
 </main>
 
