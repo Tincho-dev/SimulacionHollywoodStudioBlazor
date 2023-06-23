@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Radzen;
 using System;
+using System.Diagnostics;
 using System.Net.WebSockets;
 using System.Runtime.ConstrainedExecution;
 using System.Security.Cryptography;
@@ -12,6 +13,7 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
 {
     private readonly IDistribucionesService DistribucionesService;
     private double u;
+    public List<DatoEspera> TiemposPorAtraccion = new List<DatoEspera>();
 
     public SimuladorColasEsperaService(IDistribucionesService distribucionesService)
     {
@@ -95,7 +97,36 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
         return Task.FromResult(respuesta);
     }
 
-    public Task<string> SimularV2(int ingresoEsperado)
+    public async Task<(string, IEnumerable<DatoEspera>)> SimularV2(int ingresoEsperado)
+    {
+        TiemposPorAtraccion = await SimularTiemposDeEspera(ingresoEsperado);
+        double tiempoEsperaPromedio = TiemposPorAtraccion.SelectMany(d => d.TiempoEspera.Values).Average();
+
+        var respuesta = GetRespuesta(tiempoEsperaPromedio);
+        return (respuesta, TiemposPorAtraccion);
+    }
+
+    private string GetRespuesta(double tiempoEsperaPromedio)
+    {
+        if (tiempoEsperaPromedio <= 130)
+        {
+            return @"Cumple con el ingreso esperado y los clientes estan satisfechos con los tiempos de espera";
+        }
+        else if (tiempoEsperaPromedio <= 180)
+        {
+            return @"Cumple con el ingreso esperado y los tiempos de espera son razonables (estan entre los registrados en el pasado)";
+        }
+        else if (tiempoEsperaPromedio <= 360)
+        {
+            return @"La gente esta inconforme con el amontonamiento y los altos tiempos de espera";
+        }
+        else
+        {
+            return @"La capacidad del establecimiento es insuficiente para lograr el ingreso esperado";
+        }
+    }
+
+    public Task<List<DatoEspera>> SimularTiemposDeEspera(int ingresoEsperado)
     {
         var precioEntrada = 109;
         int[,] tiempoEsperaRR = new int[30, 17];
@@ -109,6 +140,12 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
         var cantidadVisitantesDiariosPromedio = cantidadVisitantesMensuales / 30;
         var cantidadVisitantesPorHoraPromedio = cantidadVisitantesDiariosPromedio / 16;
 
+        var datosEsperaRR = new DatoEspera { Nombre = "RR", TiempoEspera = new Dictionary<DateTime, double>() };
+        var datosEsperaMF = new DatoEspera { Nombre = "MF", TiempoEspera = new Dictionary<DateTime, double>() };
+
+        int año = DateTime.Now.Year;    
+        int mes = DateTime.Now.Month;
+
         for (int dia = 0; dia <= 29; dia++)
         {
             u = DistribucionesService.GenerarNumeroAleatorio();
@@ -117,7 +154,7 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
             {
                 var visitantesRR = 0; var visitantesMF = 0;
                 u = DistribucionesService.GenerarNumeroAleatorio();
-                int visitantesPorHora = (int) (-cantidadVisitantesPorHoraPromedio * Math.Log(u));
+                int visitantesPorHora = (int)(-cantidadVisitantesPorHoraPromedio * Math.Log(u));
                 for (int visitantes = 0; visitantes < visitantesPorHora; visitantes++)
                 {
                     u = DistribucionesService.GenerarNumeroAleatorio();
@@ -134,48 +171,17 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
                         }
                     }
                 }//visitantes++
-                // tiempo deespera de cada hora de cada día
+
+                // tiempo de espera de cada hora de cada día
                 // este contenido se tiene que mostrar en la tabla de la vista
-                tiempoEsperaRR[dia, hora] = TiempoEspera(visitantesRR, tiempoServicioRR, capacidadRR);
-                tiempoEsperaMF[dia, hora] = TiempoEspera(visitantesMF, tiempoServicioMF, capacidadMF);
-                //visitantesDiarios = 0;
+                datosEsperaRR.TiempoEspera.Add(new DateTime(año, mes, dia + 1, hora, 0, 0), TiempoEspera(visitantesRR, tiempoServicioRR, capacidadRR));
+                datosEsperaMF.TiempoEspera.Add(new DateTime(año, mes, dia + 1, hora, 0, 0), TiempoEspera(visitantesMF, tiempoServicioMF, capacidadMF));
             }
         }
 
-        int tiempoEsperaPromedio = (int)tiempoEsperaRR.Cast<int>()
-            .Zip(tiempoEsperaMF.Cast<int>(), (a, b) => a + b)
-            .Average();
-        var respuesta = string.Empty;
-        if (tiempoEsperaPromedio <= 180)
-        {
-            if (tiempoEsperaPromedio <= 130)//nivel 1 menos de 130 min 3
-            {
-                respuesta = @"Cumple con el ingreso
-                    esperado y los clientes estan
-                    satisfechos con los tiempos de espera";
-            }
-            else//nivel 4 entre 130 y 180 min 2
-            {
-                respuesta = @"Cumple con el ingreso
-                    esperado y los tiempos de
-                    espera son razonables
-                    (estan entre los registrados en el pasado)";
-            }
-        }
-        else if (tiempoEsperaPromedio <= 360)//nivel 3 entre 180 y 360 min 1
-        {
-            respuesta = @"La gente esta inconforme
-                con el amontonamiento y
-                los altos tiempos de
-                espera";
-        }
-        else//nivel 2 mas de 360 min 4
-        {
-            respuesta = @"La capacidad del establecimiento es
-                 insuficiente para lograr el ingreso esperado";
-        }
-        return Task.FromResult(respuesta);
+        return Task.FromResult(new List<DatoEspera> { datosEsperaRR, datosEsperaMF });
     }
+
 
     private int TiempoEspera(int visitantes, double tiempoServicio, int capacidad)
     {
@@ -258,6 +264,11 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
         //CrearDatoEspera("Rise of the Resistance");
         };
         return Task.FromResult(list);
+    }
+
+    public IEnumerable<DatoEspera> GetDatoEsperas()
+    {
+        return TiemposPorAtraccion;
     }
     #endregion
 }

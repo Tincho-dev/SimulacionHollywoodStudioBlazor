@@ -1,10 +1,11 @@
 ﻿@page "/"
+@using Model;
 @using Services
 @inject IDistribucionesService DistribucionesService
 @inject IJSRuntime JSRuntime
 
 
-<Simulador></Simulador>
+<Simulador OnSimulationComplete="HandleSimulationComplete"></Simulador>
 <Footer></Footer>
 
 
@@ -13,6 +14,7 @@
 @code{
 
     public double u { get; set; }
+    public IEnumerable<DatoEspera> tiemposDeEspera { get; set; }
 
     protected override Task OnInitializedAsync()
     {
@@ -22,5 +24,11 @@
         u = DistribucionesService.GenerarNumeroAleatorio();//GU(u)
 
         return base.OnInitializedAsync();
+    }
+
+    private async Task HandleSimulationComplete(IEnumerable<DatoEspera> newTiemposDeEspera)
+    {
+        tiemposDeEspera = newTiemposDeEspera;
+        // Realiza cualquier otra actualización necesaria aquí.
     }
 }

@@ -61,8 +61,8 @@
                 <div class="row" style="padding-left:15px; padding-right:15px;">
                         <!--ROW DE FUNCION -->
                         <div class="col contenedor_Tabla">
-                            <TablaTiemposDeEspera></TablaTiemposDeEspera>
-                        </div>
+                        <TablaTiemposDeEspera tiemposDeEspera="@tiemposDeEspera"></TablaTiemposDeEspera>
+                    </div>
                     </div> <!--CIERRE ROW DE FUNCION -->
 
 
@@ -85,18 +85,19 @@
 
 
 @code {
+    [Parameter]
+    public EventCallback<IEnumerable<DatoEspera>> OnSimulationComplete { get; set; }
     public double IngresosEsperados { get; set; }
     public String Respuesta { get; set; }
     public String Estado { get; set; } = "Esperando...";
+    public IEnumerable<DatoEspera> tiemposDeEspera { get; set; }
 
     private async Task HandleButtonClick()
     {
-        Console.WriteLine("El botón ha sido clickeado");
-        Console.WriteLine(IngresosEsperados);
-
         Estado = "Simulando...";
-        Respuesta = await simulador.SimularV2((int)IngresosEsperados);
-        Console.WriteLine(Respuesta);
+        var simulacionResult = await simulador.SimularV2((int)IngresosEsperados);
+        Respuesta = simulacionResult.Item1;
+        tiemposDeEspera = simulacionResult.Item2;
 
         if (string.IsNullOrEmpty(Respuesta))
         {
@@ -106,8 +107,9 @@
         {
             Estado = "Simulación completada.";
         }
-
+        await OnSimulationComplete.InvokeAsync(simulacionResult.Item2);
     }
 }
+
 
 

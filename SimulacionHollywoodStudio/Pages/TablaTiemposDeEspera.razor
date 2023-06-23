@@ -3,9 +3,8 @@
 @using Model;
 @using Services
 @inject ISimuladorColasEsperaService simulador
+
 <RadzenHeading Size="H3" Text="Tabla Tiempos De Espera"></RadzenHeading>
-
-
 
 <div>
     <RadzenButton Icon="arrow_left" Click="@(args => ChangeDate(-1))"
@@ -57,7 +56,8 @@
 }
 
 @code {
-    IEnumerable<DatoEspera> tiemposDeEspera;
+    [Parameter]
+    public IEnumerable<DatoEspera> tiemposDeEspera { get; set; }
     IEnumerable<DatoEspera> tiemposDeEsperaFiltrados;
     DateTime selectedDate = DateTime.Today;
 
@@ -65,12 +65,12 @@
     {
         await base.OnInitializedAsync();
 
-        tiemposDeEspera = await simulador.ObtenerDatosEspera(90);
         OnDateChanged(selectedDate);
     }
 
     void OnDateChanged(DateTime? date)
     {
+        tiemposDeEspera = simulador.GetDatoEsperas();
         if (date.HasValue)
         {
             selectedDate = date.Value;
