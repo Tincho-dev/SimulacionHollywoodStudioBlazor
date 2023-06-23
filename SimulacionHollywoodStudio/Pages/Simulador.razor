@@ -4,20 +4,20 @@
 @inject IJSRuntime JSRuntime
 
 <main class="animate__animated animate__fadeIn">
-    
+
     <div class="container-fluid text-center" style="transition: height 0.5s ease;">
         <!-- CONTAINER DE MAIN-->
         <div class="row">
             <!-- Todo el contenido de la vista main -->
             <div class="col-sm-4 p-0">
                 <div class="p-3 mb-3 contenedor_Datos container-fluids">
-                    
+
                     <div class="row">
                         <div class="col">
                             <h3>Ingreso esperado</h3>
                         </div>
                     </div>
-                        
+
                     <div class="row d-flex align-items-center justify-content-center">
                         <div class="col-5 text-left d-flex align-items-center">
                             <p>Ingreso esperado: </p>
@@ -32,7 +32,7 @@
                             <button class="btn btn-primary btn-block rounded-3 w-100 botondeSimular" @onclick="HandleButtonClick">Simular</button>
                         </div>
                     </div>
-                    
+
                 </div>
 
                 <div class="p-1 mb-1 contenedor_Datos container-fluids" style="height:270px;">
@@ -55,11 +55,11 @@
 
             <div class="col-sm-4 p-1">
                 <!-- COL DE FUNCION -->
-                
+
                 <div class="row" style="padding-left:15px; padding-right:15px;">
-                        <!--ROW DE FUNCION -->
-                    <div class="contenedor_Datos text-center contenedorRespuesta mb-2" 
-                    style="transition: height 0.5s ease; display:block; min-height:100px">
+                    <!--ROW DE FUNCION -->
+                    <div class="contenedor_Datos text-center contenedorRespuesta mb-2"
+                         style="transition: height 0.5s ease; display:block; min-height:100px">
                         <p>@Estado</p>
                         <p>@Respuesta</p>
                     </div>
@@ -89,7 +89,7 @@
                                         <th>Hora</th>
                                         @foreach (var dato in tiemposDeEsperaFiltrados)
                                         {
-                                            <th>@dato.Nombre</th>
+                                            <th>@dato.Nombre (min)</th>
                                         }
                                     </tr>
                                 </thead>
@@ -97,12 +97,12 @@
                                     @foreach (var hour in hours)
                                     {
                                         <tr>
-                                            <td>@hour:00</td>
+                                            <td>@(hour+8):00</td>
                                             @foreach (var dato in tiemposDeEsperaFiltrados)
                                             {
                                                 if (dato.TiempoEspera.TryGetValue(new DateTime(selectedDate.Year, selectedDate.Month, selectedDate.Day, hour, 0, 0), out var tiempo))
                                                 {
-                                                    <td>@tiempo.ToString("#") min</td>
+                                                    <td>@tiempo.ToString("#") </td>
                                                 }
                                                 else
                                                 {
@@ -117,13 +117,13 @@
                         }
                     </div>
 
-                    
-                    </div> <!--CIERRE ROW DE FUNCION -->
+
+                </div> <!--CIERRE ROW DE FUNCION -->
             </div> <!--CIERRE COL DE FUNCION -->
             <div class="col-sm-4 p-0">
                 <div class="p-2 contenedor_Datos d-none d-md-block">
-                <!-- COL 3 DE MAPA -->
-                @*<ConteinerMapa></ConteinerMapa>*@
+                    <!-- COL 3 DE MAPA -->
+                    @*<ConteinerMapa></ConteinerMapa>*@
                     <div class="row">
                         <!-- ROW 1 DE STAR WARS TITULO -->
                         <div class="col" style="text-align: center;">
@@ -137,13 +137,14 @@
 
                             <div class="image-container">
                                 <img style="width:380px;height:420px; border-radius:20px;" src="Images/ImagenMapa.jpg" alt="">
-                                @if(TiemposDeEspera.Count() !=0){
-                                <div class="comment-bubble comment-MF">
-                                    <p>TE en MF: @TiemposDeEspera.FirstOrDefault(a => a.Nombre == "RR")?.TiempoEspera.Average(t => t.Value).ToString("#.#")</p>
-                                </div>
-                                <div class="comment-bubble comment-RR">
-                                        <p>TE en RR: @TiemposDeEspera.FirstOrDefault(a => a.Nombre == "MF")?.TiempoEspera.Average(t => t.Value).ToString("#.#")</p>
-                                </div>
+                                @if (TiemposDeEspera.Count() != 0)
+                                {
+                                    <div class="comment-bubble comment-MF">
+                                        <p>Tiempo de Espera en Millenium Falcon: @TiempoEsperaPromedioMF.ToString("#.#")</p>
+                                    </div>
+                                    <div class="comment-bubble comment-RR">
+                                        <p>Tiempo de Espera en Rise of the Resistance: @TiempoEsperaPromedioRR.ToString("#.#")</p>
+                                    </div>
                                 }
                             </div>
 
@@ -168,6 +169,8 @@
     IEnumerable<DatoEspera> tiemposDeEsperaFiltrados;
     DateTime selectedDate = DateTime.Today;
     const int PrecioEntrada = 109;
+    public double TiempoEsperaPromedioRR { get; set; }
+    public double TiempoEsperaPromedioMF { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -176,14 +179,31 @@
         OnDateChanged(selectedDate);
     }
 
-    void OnDateChanged(DateTime? date)
+    async void OnDateChanged(DateTime? date)
     {
         if (date.HasValue)
         {
             selectedDate = date.Value;
             tiemposDeEsperaFiltrados = TiemposDeEspera.Where(d => d.TiempoEspera.Keys.Any(k => k.Date == selectedDate.Date));
-        }
+            if (tiemposDeEsperaFiltrados.Any())
+            {
+                TiempoEsperaPromedioRR = tiemposDeEsperaFiltrados
+                .FirstOrDefault(a => a.Nombre == "RR")?
+                .TiempoEspera
+                .Where(k => k.Key.Date == selectedDate.Date)
+                .DefaultIfEmpty()
+                .Average(t => t.Value) ?? 0;
 
+                TiempoEsperaPromedioMF = tiemposDeEsperaFiltrados
+                .FirstOrDefault(a => a.Nombre == "MF")?
+                .TiempoEspera
+                .Where(k => k.Key.Date == selectedDate.Date)
+                .DefaultIfEmpty()
+                .Average(t => t.Value) ?? 0;
+                TiempoEsperaPromedio = (TiempoEsperaPromedioMF + TiempoEsperaPromedioRR) / 2;
+                await JSRuntime.InvokeVoidAsync("plotFunction", TiempoEsperaPromedio);
+            }
+        }
     }
 
     void ChangeDate(int days)
@@ -197,6 +217,8 @@
         var simulacionResult = await simulador.Simular((int)IngresosEsperados);
         Respuesta = simulacionResult.Item1;
         TiemposDeEspera = simulacionResult.Item2;
+        TiempoEsperaPromedioRR = TiemposDeEspera.FirstOrDefault(a => a.Nombre == "RR")?.TiempoEspera.Where(t => t.Value > 0).Average(t => t.Value) ?? 0;
+        TiempoEsperaPromedioMF = TiemposDeEspera.FirstOrDefault(a => a.Nombre == "MF")?.TiempoEspera.Where(t => t.Value > 0).Average(t => t.Value) ?? 0;
         TiempoEsperaPromedio = simulacionResult.Item3;
 
         if (string.IsNullOrEmpty(Respuesta))
