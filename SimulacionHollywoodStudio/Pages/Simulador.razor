@@ -208,6 +208,7 @@
         }
 
         await OnSimulationComplete.InvokeAsync(simulacionResult.Item2);
+        OnDateChanged(selectedDate);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
