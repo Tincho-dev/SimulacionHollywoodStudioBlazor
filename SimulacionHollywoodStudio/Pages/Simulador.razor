@@ -8,6 +8,14 @@
     <div class="container-fluid text-center" style="transition: height 0.5s ease;">
         <!-- CONTAINER DE MAIN-->
         <div class="row">
+            @if (!string.IsNullOrEmpty(AlertMessage))
+            {
+                <div class="col-12">
+                    <div class="alert alert-danger" role="alert">
+                        @AlertMessage
+                    </div>
+                </div>
+            }
             <!-- Todo el contenido de la vista main -->
             <div class="col-sm-4 p-0">
                 <div class="p-3 mb-3 contenedor_Datos container-fluids">
@@ -23,6 +31,7 @@
                             <p>Ingreso esperado: </p>
                         </div>
                         <div class="col-7">
+                            <RadzenLabel>Ingrese el monto esperado mensual medido en millónes de dólares</RadzenLabel>
                             <input @bind="IngresosEsperados" @bind:event="oninput" class="w-100" type="number" name="quantity" min="650000" max="100000000" step="10000">
                         </div>
                     </div>
@@ -162,6 +171,7 @@
     public double IngresosEsperados { get; set; }
     public String Respuesta { get; set; } = String.Empty;
     public String Estado { get; set; } = "Esperando...";
+    public string AlertMessage { get; set; }
     public IEnumerable<DatoEspera> TiemposDeEspera { get; set; } = new List<DatoEspera>();
     IEnumerable<DatoEspera> tiemposDeEsperaFiltrados;
     DateTime selectedDate = DateTime.Today;
@@ -173,6 +183,7 @@
     public double TiempoEsperaPromedioRRMensual { get; set; }
     public double TiempoEsperaPromedioMFMensual { get; set; }
     public IEnumerable<DatoEspera> TiemposDeEsperaPromedioMensual { get; set; } = new List<DatoEspera>();
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -225,7 +236,15 @@
     private async Task HandleButtonClick()
     {
         Estado = "Simulando...";
-        var simulacionResult = await simulador.Simular((int)IngresosEsperados);
+        if (IngresosEsperados > 175 || IngresosEsperados <0)
+        {
+            //mostrar algo de que se supera el limite y pedir el ingreso de otro 
+            AlertMessage = "El ingreso esperado supera el límite. Por favor ingrese un valor menor.";
+            Estado = "Error en la entrada.";
+            return;
+
+        }
+        var simulacionResult = await simulador.Simular((int)IngresosEsperados*1000000);
         Respuesta = simulacionResult.Item1;
         TiemposDeEspera = simulacionResult.Item2;
 
