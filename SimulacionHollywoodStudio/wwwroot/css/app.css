@@ -72,8 +72,8 @@ body.light-mode {
     display: flex;
     flex-direction: column;
     min-height: 100vh !important;
-    overflow-y: hidden;
-}
+/*    overflow-y: hidden;
+*/}
 
 
 /* Navbar en modo claro */
@@ -120,7 +120,7 @@ footer {
     border: 3px solid black;
     border-radius: 20px;
     transition: all 0.3s;
-    height: 380px; /* Establece la altura máxima del contenedor */
+    height: 502px; /* Establece la altura máxima del contenedor */
     overflow-y: scroll; /* Añade un scroll vertical al contenedor */
     align-items: center !important; /* Centra verticalmente los elementos dentro del contenedor */
     justify-content: center !important; /* Centra horizontalmente los elementos dentro del contenedor */
