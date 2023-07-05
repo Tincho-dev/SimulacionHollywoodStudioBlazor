@@ -3,8 +3,8 @@ namespace Services;
 
 public class GeneradorService : IGeneradorService
 {
-    public double CongruencialMixto(int semilla, int constanteAditiva, int constanteMultiplicativa,
-        int modulo, int digitos)
+    public double CongruencialMixto(long semilla, long constanteAditiva, long constanteMultiplicativa,
+        long modulo, int digitos)
     {
         semilla = (constanteMultiplicativa * semilla + constanteAditiva) % modulo;
         return (
@@ -43,8 +43,8 @@ public class GeneradorService : IGeneradorService
         return u;
     }
 
-    public List<double> CongruencialMixto(int semilla, int constanteAditiva, int constanteMultiplicativa,
-        int modulo, int digitos, int totalDeNumerosaGenerar)
+    public List<double> CongruencialMixto(long semilla, long constanteAditiva, long constanteMultiplicativa,
+        long modulo, int digitos, long totalDeNumerosaGenerar)
     {
         List<double> u = new List<double>();
 

@@ -232,17 +232,32 @@
 
         OnDateChanged(selectedDate);
     }
+    private async Task HandleButtonClick2()
+    {
+        IGeneradorService g = new GeneradorService();   
+        IDistribucionesService d = new DistribucionesService(g);
+        List<double> l = new();
+        int i = 1;
+        while (i <90000000)
+        {
+            var n = d.GenerarNumeroAleatorio();
+            l.Add(n);
+            Console.WriteLine(n);
+            i++;
+            Console.WriteLine($"Promedio: { l.Average()}");
+        }
+    }
+
 
     private async Task HandleButtonClick()
     {
         Estado = "Simulando...";
         if (IngresosEsperados > 175 || IngresosEsperados <0)
         {
-            //mostrar algo de que se supera el limite y pedir el ingreso de otro 
+            //mostrar mensaje de error 
             AlertMessage = "El ingreso esperado supera el límite. Por favor ingrese un valor menor.";
             Estado = "Error en la entrada.";
             return;
-
         }
         var simulacionResult = await simulador.Simular((int)IngresosEsperados*1000000);
         Respuesta = simulacionResult.Item1;

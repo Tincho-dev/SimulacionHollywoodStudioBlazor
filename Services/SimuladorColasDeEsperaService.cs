@@ -15,7 +15,7 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
 
     public async Task<(string, IEnumerable<DatoEspera>, double)> Simular(int ingresoEsperado)
     {
-        TiemposPorAtraccion = await SimularTiemposDeEspera(ingresoEsperado);
+        TiemposPorAtraccion = SimularTiemposDeEspera(ingresoEsperado);
         double tiempoEsperaPromedio = TiemposPorAtraccion.SelectMany(d => d.TiempoEspera.Values).Average();
 
         var respuesta = GetRespuesta(tiempoEsperaPromedio);
@@ -27,7 +27,7 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
         return TiemposPorAtraccion;
     }
 
-    public async Task<List<DatoEspera>> SimularTiemposDeEspera(int ingresoEsperado)
+    public List<DatoEspera> SimularTiemposDeEspera(int ingresoEsperado)
     {
         var precioEntrada = 109;
         int[,] tiempoEsperaRR = new int[30, 17];
@@ -44,7 +44,7 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
         var datosEsperaRR = new DatoEspera { Nombre = "RR", TiempoEspera = new Dictionary<DateTime, double>() };
         var datosEsperaMF = new DatoEspera { Nombre = "MF", TiempoEspera = new Dictionary<DateTime, double>() };
 
-        int año = DateTime.Now.Year;    
+        int año = DateTime.Now.Year;
         int mes = DateTime.Now.Month;
 
         for (int dia = 0; dia <= 29; dia++)
@@ -56,7 +56,7 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
                 var visitantesRR = 0; var visitantesMF = 0;
                 u = DistribucionesService.GenerarNumeroAleatorio();
                 int visitantesPorHora = (int)(-cantidadVisitantesPorHoraPromedio * Math.Log(u));
-                
+
                 for (int visitantes = 0; visitantes < visitantesPorHora; visitantes++)
                 {
                     u = DistribucionesService.GenerarNumeroAleatorio();
