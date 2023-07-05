@@ -25,5 +25,4 @@ public class DistribucionesService : IDistribucionesService
         ConstanteMultiplicativa,
         Modulo,
         Digitos);
-    //=> new Random().NextDouble();
 }

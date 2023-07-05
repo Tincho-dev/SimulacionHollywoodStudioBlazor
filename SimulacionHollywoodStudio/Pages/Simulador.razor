@@ -32,7 +32,7 @@
                         </div>
                         <div class="col-7">
                             <RadzenLabel>Ingrese el monto esperado mensual medido en millónes de dólares</RadzenLabel>
-                            <input @bind="IngresosEsperados" @bind:event="oninput" class="w-100" type="number" name="quantity" min="650000" max="100000000" step="10000">
+                            <input @bind="IngresosEsperados" @bind:event="oninput" class="w-100" type="number" name="quantity" min="1" max="175" step="1">
                         </div>
                     </div>
                     <hr>
@@ -221,37 +221,34 @@
 
     void ChangeDate(int days)
     {
-        if (selectedDate.AddDays(days).Month != selectedDate.Month)
+        var newDate = selectedDate.AddDays(days);
+        if (days < 0 && selectedDate.Day == 1)
         {
-            selectedDate = new DateTime(selectedDate.Year, selectedDate.Month, 1);
+            selectedDate = new DateTime(selectedDate.Year, selectedDate.Month, DateTime.DaysInMonth(selectedDate.Year, selectedDate.Month));
+        }
+        else if (newDate.Month != selectedDate.Month)
+        {
+            if (days > 0)
+            {
+                selectedDate = new DateTime(selectedDate.Year, selectedDate.Month, 1);
+            }
+            else
+            {
+                selectedDate = new DateTime(selectedDate.Year, selectedDate.Month, DateTime.DaysInMonth(selectedDate.Year, selectedDate.Month));
+            }
         }
         else
         {
-            selectedDate = selectedDate.AddDays(days);
+            selectedDate = newDate;
         }
-
         OnDateChanged(selectedDate);
-    }
-    private async Task HandleButtonClick2()
-    {
-        IGeneradorService g = new GeneradorService();   
-        IDistribucionesService d = new DistribucionesService(g);
-        List<double> l = new();
-        int i = 1;
-        while (i <90000000)
-        {
-            var n = d.GenerarNumeroAleatorio();
-            l.Add(n);
-            Console.WriteLine(n);
-            i++;
-            Console.WriteLine($"Promedio: { l.Average()}");
-        }
     }
 
 
     private async Task HandleButtonClick()
     {
         Estado = "Simulando...";
+        AlertMessage = string.Empty;
         if (IngresosEsperados > 175 || IngresosEsperados <0)
         {
             //mostrar mensaje de error 

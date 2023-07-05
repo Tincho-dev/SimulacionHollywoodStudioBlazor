@@ -47,7 +47,7 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
         int año = DateTime.Now.Year;
         int mes = DateTime.Now.Month;
 
-        for (int dia = 0; dia <= 29; dia++)
+        for (int dia = 0; dia <= 30; dia++)
         {
             u = DistribucionesService.GenerarNumeroAleatorio();
             var visitantesDiarios = -cantidadVisitantesDiariosPromedio * Math.Log(u);
