@@ -39,7 +39,7 @@
                     <div class="row">
                         <div class="col-12">
                             <button class="btn btn-primary btn-block rounded-3 w-100 botondeSimular" @onclick="HandleButtonClick">Simular</button>
-                            @*<button class="btn btn-primary btn-block rounded-3 w-100 botondeSimular" @onclick="HandleButtonMensualClick">Promedio Mensual</button>*@
+                            <button class="btn btn-primary btn-block rounded-3 w-100 botondeSimular" @onclick="HandleButtonMensualClick">Promedio Mensual</button>
                         </div>
                     </div>
 
@@ -154,6 +154,7 @@
         </div> <!-- CIERRE DE ROW QUE CONTIENE A TODO EL MAIN-->
     </div> <!-- CIERRE DE CONTAINER DE MAIN-->
 </main>
+<Footer></Footer>
 
 
 
@@ -267,14 +268,17 @@
         OnDateChanged(selectedDate);
     }
 
-    private async Task HandleButtonMensualClick()// a implementar en la proxima iteracion
+    private async Task HandleButtonMensualClick()
     {
+        // Calcular el promedio mensual de los tiempos de espera para todas las atracciones
         TiempoEsperaPromedioRR = TiempoEsperaPromedioRRMensual;
         TiempoEsperaPromedioMF = TiempoEsperaPromedioMFMensual;
         TiempoEsperaPromedio = TiempoEsperaPromedioMensual;
 
+        // Actualizar el gráfico con el nuevo promedio mensual
         await JSRuntime.InvokeVoidAsync("plotFunction", TiempoEsperaPromedio);
     }
+
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
