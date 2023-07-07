@@ -28,8 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BlazorCharts" Version="0.4.108" />
-    <PackageReference Include="Blazorise.Charts" Version="1.2.4" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.13" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.13" PrivateAssets="all" />
     <PackageReference Include="Radzen.Blazor" Version="4.12.1" />
