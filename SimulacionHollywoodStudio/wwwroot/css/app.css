@@ -63,29 +63,29 @@ a, .btn-link {
         content: "An error has occurred."
     }
 
-/*Estilos componenete de simulacion*/
+Estilos componenete de simulacion
 
-/* Estilos para el modo claro */
+ Estilos para el modo claro 
 body.light-mode {
     background-color: #f2f1f7 !important;
     color: black !important;
     display: flex;
     flex-direction: column;
     min-height: 100vh !important;
-/*    overflow-y: hidden;
-*/}
+    overflow-y: hidden;
+}
 
 
-/* Navbar en modo claro */
+ Navbar en modo claro 
 .navbar {
-    border-bottom: 3px solid black; /* Estilo de borde deseado */
-    border-radius: 5px; /* Opcional: añade esquinas redondeadas al borde */
+    border-bottom: 3px solid black;  Estilo de borde deseado 
+    border-radius: 5px;  Opcional: añade esquinas redondeadas al borde 
     background-color: white;
 }
 
 
 nav a {
-    /* Estilos para la etiqueta <a> dentro de <nav> */
+     Estilos para la etiqueta <a> dentro de <nav> 
     color: black;
     text-decoration: none;
     font-size: 35px;
@@ -95,8 +95,8 @@ nav a {
 footer {
     background-color: white;
     width: 100%;
-    border: 3px solid black; /* Estilo de borde deseado */
-    border-radius: 10px; /* Opcional: añade esquinas redondeadas al borde */
+    border: 3px solid black;  Estilo de borde deseado 
+    border-radius: 10px;  Opcional: añade esquinas redondeadas al borde 
     margin-top: auto !important;
 }
 
@@ -120,10 +120,10 @@ footer {
     border: 3px solid black;
     border-radius: 20px;
     transition: all 0.3s;
-    height: 502px; /* Establece la altura máxima del contenedor */
-    overflow-y: scroll; /* Añade un scroll vertical al contenedor */
-    align-items: center !important; /* Centra verticalmente los elementos dentro del contenedor */
-    justify-content: center !important; /* Centra horizontalmente los elementos dentro del contenedor */
+    height: 502px;  Establece la altura máxima del contenedor 
+    overflow-y: scroll;  Añade un scroll vertical al contenedor 
+    align-items: center !important;  Centra verticalmente los elementos dentro del contenedor 
+    justify-content: center !important;  Centra horizontalmente los elementos dentro del contenedor 
 }
 
     .contenedor_Tabla:hover {
@@ -150,13 +150,13 @@ footer {
     }
 
 .comment-MF {
-    top: 75%; /* Posición vertical del globo */
-    left: 40%; /* Posición horizontal del globo */
+    top: 75%;  Posición vertical del globo 
+    left: 40%;  Posición horizontal del globo 
 }
 
 .comment-RR {
-    top: 25%; /* Posición vertical del globo */
-    left: 82%; /* Posición horizontal del globo */
+    top: 25%;  Posición vertical del globo 
+    left: 82%;  Posición horizontal del globo 
 }
 
 .contenedorRespuesta {

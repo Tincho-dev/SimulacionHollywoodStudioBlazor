@@ -1,18 +1,6 @@
 ﻿@page "/"
-@using Model;
-@using Services
-@inject IDistribucionesService DistribucionesService
-@inject IJSRuntime JSRuntime
-
 
 <Simulador></Simulador>
-<Footer></Footer>
 
 @code{
-    public IEnumerable<DatoEspera> tiemposDeEspera { get; set; }
-
-    protected override Task OnInitializedAsync()
-    {
-        return base.OnInitializedAsync();
-    }
 }
