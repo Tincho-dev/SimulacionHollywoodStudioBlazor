@@ -6,7 +6,6 @@
 <main class="animate__animated animate__fadeIn">
 
     <div class="container-fluid text-center" style="transition: height 0.5s ease;">
-        <!-- CONTAINER DE MAIN-->
         <div class="row">
             @if (!string.IsNullOrEmpty(AlertMessage))
             {
@@ -16,7 +15,6 @@
                     </div>
                 </div>
             }
-            <!-- Todo el contenido de la vista main -->
             <div class="col-12 col-sm-4 p-0">
                 <div class="p-3 mb-3 contenedor_Datos container-fluids">
 
@@ -52,18 +50,15 @@
                         </div>
                     </div>
                     <div class="row">
-                        <!--ROW DE FUNCION -->
                         <div class="col">
                             <canvas id="myChart"></canvas>
                             <p>Cantidad de Visitantes</p>
                         </div>
-                    </div> <!--CIERRE ROW DE FUNCION -->
+                    </div>
                 </div>
-            </div> <!--CIERRE COL 1 DE INPUTS-->
+            </div>
             <div class="col-12 col-sm-4 p-1">
-                <!-- COL DE FUNCION -->
                 <div class="row" style="padding-left:15px; padding-right:15px;">
-                    <!--ROW DE FUNCION -->
                     <div class="col contenedor_Tabla" style="height: 31rem">
                         <RadzenHeading Size="H3" Text="Tabla Tiempos De Espera"></RadzenHeading>
                         <div>
@@ -112,8 +107,8 @@
                             </table>
                         }
                     </div>
-                </div> <!--CIERRE ROW DE FUNCION -->
-            </div> <!--CIERRE COL DE FUNCION -->
+                </div>
+            </div>
             <div class="col-12 col-sm-4 p-0">
                 <div class="contenedor_Datos text-center contenedorRespuesta mb-2"
                      style="transition: height 0.5s ease; display:block; min-height:100px">
@@ -122,14 +117,12 @@
                     <p>@Respuesta</p>
                 </div>
                 <div class="p-2 contenedor_Datos d-none d-md-block">
-                    <!-- COL 3 DE MAPA -->
                     <div class="row">
-                        <!-- ROW 1 DE STAR WARS TITULO -->
                         <div class="col" style="text-align: center;">
                             <h3>Star Wars Galaxy's Edge</h3>
                             <h4>Tiempo de Espera en </h4>
-                        </div> <!--CIERRE COL 1 DE STAR WARS TITULO -->
-                    </div> <!--CIERRE ROW 1 DE STAR WARS TITULO -->
+                        </div>
+                    </div>
                     <div class="row">
                         <!-- ROW 2 DE MAPA DE STAR WARS -->
                         <div class="col">
@@ -146,13 +139,12 @@
                                     </div>
                                 }
                             </div>
-
-                        </div> <!--CIERRE COL 1 DE MAPA DE STAR WARS  -->
-                    </div> <!--CIERRE ROW 2 DE MAPA DE STAR WARS  -->
+                        </div>
+                    </div>
                 </div>
-            </div> <!--CIERRE COL 3 DE MAPA -->
-        </div> <!-- CIERRE DE ROW QUE CONTIENE A TODO EL MAIN-->
-    </div> <!-- CIERRE DE CONTAINER DE MAIN-->
+            </div>
+        </div>
+    </div
 </main>
 <Footer></Footer>
 
