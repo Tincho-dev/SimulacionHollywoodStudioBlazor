@@ -13,9 +13,9 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
         DistribucionesService = distribucionesService;
     }
 
-    public async Task<(string, IEnumerable<DatoEspera>, double)> Simular(int ingresoEsperado)
+    public async Task<(string, IEnumerable<DatoEspera>, double)> Simular(int ingresoEsperado, double precioEntrada)
     {
-        TiemposPorAtraccion = SimularTiemposDeEspera(ingresoEsperado);
+        TiemposPorAtraccion = SimularTiemposDeEspera(ingresoEsperado, precioEntrada);
         double tiempoEsperaPromedio = TiemposPorAtraccion.SelectMany(d => d.TiempoEspera.Values).Average();
 
         var respuesta = GetRespuesta(tiempoEsperaPromedio);
@@ -27,9 +27,9 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
         return TiemposPorAtraccion;
     }
 
-    public List<DatoEspera> SimularTiemposDeEspera(int ingresoEsperado)
+    public List<DatoEspera> SimularTiemposDeEspera(int ingresoEsperado, double precioEntrada)
     {
-        var precioEntrada = 109;
+        var precio = precioEntrada;
         int[,] tiempoEsperaRR = new int[30, 17];
         int[,] tiempoEsperaMF = new int[30, 17];
         var tiempoServicioRR = 18;
@@ -37,7 +37,7 @@ public class SimuladorColasEsperaService : ISimuladorColasEsperaService
         var capacidadRR = 60;
         var capacidadMF = 42;
 
-        var cantidadVisitantesMensuales = ingresoEsperado / precioEntrada;
+        var cantidadVisitantesMensuales = ingresoEsperado / precio;
         var cantidadVisitantesDiariosPromedio = cantidadVisitantesMensuales / 30;
         var cantidadVisitantesPorHoraPromedio = cantidadVisitantesDiariosPromedio / 16;
 
