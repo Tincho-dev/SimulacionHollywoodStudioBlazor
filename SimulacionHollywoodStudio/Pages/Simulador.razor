@@ -36,7 +36,7 @@
                     <hr>
                     <div class="row">
                         <div class="col-12">
-                            <button class="btn btn-primary btn-block rounded-3 w-100 botondeSimular" @onclick="HandleButtonClick">Simular</button>
+                            <button class="btn btn-primary btn-block rounded-3 w-100 botondeSimular" @onclick="HandleButtonClickAsync">Simular</button>
                             @*<button class="btn btn-primary btn-block rounded-3 w-100 botondeSimular" @onclick="HandleButtonMensualClick">Promedio Mensual</button>*@
                         </div>
                     </div>
@@ -154,9 +154,9 @@
     public double IngresosEsperados { get; set; }
     public string Respuesta { get; set; } = String.Empty;
     public string Estado { get; set; } = "Esperando...";
-    public string AlertMessage { get; set; }
+    public string? AlertMessage { get; set; }
     public IEnumerable<DatoEspera> TiemposDeEspera { get; set; } = new List<DatoEspera>();
-    IEnumerable<DatoEspera> tiemposDeEsperaFiltrados;
+    IEnumerable<DatoEspera>? tiemposDeEsperaFiltrados;
     DateTime selectedDate = DateTime.Today;
     const double PrecioEntrada = 109;
     public double TiempoEsperaPromedio { get; set; }
@@ -175,6 +175,16 @@
         OnDateChanged(selectedDate);
     }
 
+    double GetTiempoPromedio(Atracciones name)
+    {
+        return tiemposDeEsperaFiltrados
+        .FirstOrDefault(a => a.Nombre == name)?
+        .TiempoEspera
+        .Where(k => k.Key.Date == selectedDate.Date)
+        .DefaultIfEmpty()
+        .Average(t => t.Value) ?? 0;
+    }
+
     async void OnDateChanged(DateTime? date)
     {
         if (date.HasValue)
@@ -184,14 +194,15 @@
             if (tiemposDeEsperaFiltrados.Any())
             {
                 TiempoEsperaPromedioRR = tiemposDeEsperaFiltrados
-                .FirstOrDefault(a => a.Nombre == "RR")?
+                .FirstOrDefault(a => a.Nombre == Atracciones.RiseOfTheResistance)?
                 .TiempoEspera
                 .Where(k => k.Key.Date == selectedDate.Date)
                 .DefaultIfEmpty()
                 .Average(t => t.Value) ?? 0;
 
+
                 TiempoEsperaPromedioMF = tiemposDeEsperaFiltrados
-                .FirstOrDefault(a => a.Nombre == "MF")?
+                .FirstOrDefault(a => a.Nombre == Atracciones.MilleniumFalcom)?
                 .TiempoEspera
                 .Where(k => k.Key.Date == selectedDate.Date)
                 .DefaultIfEmpty()
@@ -205,53 +216,87 @@
     void ChangeDate(int days)
     {
         var newDate = selectedDate.AddDays(days);
-        if (days < 0 && selectedDate.Day == 1)
-        {
-            selectedDate = new DateTime(selectedDate.Year, selectedDate.Month, DateTime.DaysInMonth(selectedDate.Year, selectedDate.Month));
-        }
-        else if (newDate.Month != selectedDate.Month)
-        {
-            if (days > 0)
-            {
-                selectedDate = new DateTime(selectedDate.Year, selectedDate.Month, 1);
-            }
-            else
-            {
-                selectedDate = new DateTime(selectedDate.Year, selectedDate.Month, DateTime.DaysInMonth(selectedDate.Year, selectedDate.Month));
-            }
-        }
-        else
-        {
-            selectedDate = newDate;
-        }
+
+        selectedDate = days < 0 && selectedDate.Day == 1
+        ? new DateTime(selectedDate.Year, selectedDate.Month, 
+            DateTime.DaysInMonth(selectedDate.Year, selectedDate.Month))
+        : (newDate.Month != selectedDate.Month
+        ? (days > 0
+            ? new DateTime(selectedDate.Year, selectedDate.Month, 1)
+            : new DateTime(selectedDate.Year, selectedDate.Month, 
+                DateTime.DaysInMonth(selectedDate.Year, selectedDate.Month)))
+        : newDate);
+
         OnDateChanged(selectedDate);
     }
 
 
-    private async Task HandleButtonClick()
+    private async Task HandleButtonClickAsync()
     {
         Estado = "Simulando...";
         AlertMessage = string.Empty;
-        if (IngresosEsperados > 175 || IngresosEsperados < 0)
+
+        // Validación de los ingresos esperados.
+        if (!ValidarIngresosEsperados())
         {
-            //mostrar mensaje de error
-            AlertMessage = "El ingreso esperado supera el límite. Por favor ingrese un valor menor.";
-            Estado = "Error en la entrada.";
             return;
         }
-        var simulacionResult = await simulador.Simular((int)IngresosEsperados * 1000000, PrecioEntrada);
+
+        // Simulación y asignación de los resultados
+        var simulacionResult = await SimulacionYAsignacionResultados();
+
+        // Comprobación y manejo de los resultados
+        Estado = string.IsNullOrEmpty(Respuesta)
+        ? "Error: No se recibió respuesta"
+        : "Simulacion completada.";
+
+
+        // Actualización de la gráfica
+        await JSRuntime.InvokeVoidAsync("plotFunction", TiempoEsperaPromedio);
+
+        // Actualización de la fecha
+        OnDateChanged(selectedDate);
+    }
+
+    private bool ValidarIngresosEsperados()
+    {
+        if (IngresosEsperados > 175 || IngresosEsperados < 0)
+        {
+            AlertMessage = "El ingreso esperado supera el límite. Por favor ingrese un valor menor.";
+            Estado = "Error en la entrada.";
+            return false;
+        }
+
+        return true;
+    }
+
+    private async Task<(string, IEnumerable<DatoEspera>, double)> SimulacionYAsignacionResultados()
+    {
+        var simulacionResult = simulador.Simular((int)IngresosEsperados * 1000000, PrecioEntrada);
+
         Respuesta = simulacionResult.Item1;
         TiemposDeEspera = simulacionResult.Item2;
 
-        TiempoEsperaPromedioRRMensual = TiempoEsperaPromedioRR = TiemposDeEspera.FirstOrDefault(a => a.Nombre == "RR")?.TiempoEspera.Where(t => t.Value > 0).DefaultIfEmpty().Average(t => t.Value) ?? 0;
-        TiempoEsperaPromedioMFMensual = TiempoEsperaPromedioMF = TiemposDeEspera.FirstOrDefault(a => a.Nombre == "MF")?.TiempoEspera.Where(t => t.Value > 0).DefaultIfEmpty().Average(t => t.Value) ?? 0;
+        var tiempoEsperaRiseOfResistance = ObtenerTiempoEspera(Atracciones.RiseOfTheResistance);
+        var tiempoEsperaMilleniumFalcom = ObtenerTiempoEspera(Atracciones.MilleniumFalcom);
+
+        TiempoEsperaPromedioRRMensual = TiempoEsperaPromedioRR = tiempoEsperaRiseOfResistance;
+        TiempoEsperaPromedioMFMensual = TiempoEsperaPromedioMF = tiempoEsperaMilleniumFalcom;
         TiempoEsperaPromedioMensual = TiempoEsperaPromedio = simulacionResult.Item3;
 
-        Estado = string.IsNullOrEmpty(Respuesta) ? "Error: No se recibió respuesta" : "Simulacion completada.";
-
-        await JSRuntime.InvokeVoidAsync("plotFunction", TiempoEsperaPromedio);
-        OnDateChanged(selectedDate);
+        return simulacionResult;
     }
+
+    private double ObtenerTiempoEspera(Atracciones atraccion)
+    {
+        return TiemposDeEspera
+            .FirstOrDefault(a => a.Nombre == atraccion)?
+            .TiempoEspera
+            .Where(t => t.Value > 0)
+            .DefaultIfEmpty()
+            .Average(t => t.Value) ?? 0;
+    }
+
 
     private async Task HandleButtonMensualClick()
     {

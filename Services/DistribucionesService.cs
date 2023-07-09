@@ -1,4 +1,6 @@
-﻿namespace Services;
+﻿using System.Security.Cryptography;
+
+namespace Services;
 
 public class DistribucionesService : IDistribucionesService
 {
@@ -12,7 +14,7 @@ public class DistribucionesService : IDistribucionesService
     {
         GeneradorService = generadorService;
         Semilla = 1;
-        ConstanteAditiva = 12345;
+        ConstanteAditiva = 123456;
         ConstanteMultiplicativa = 1103515245;
         Modulo = 2147483648;
         Digitos = 2;
