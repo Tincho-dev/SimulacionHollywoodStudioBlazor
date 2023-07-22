@@ -1,32 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components;
-using System.Net.Http;
-using System.Net.Http.Json;
-using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Components.Routing;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.Components.Web.Virtualization;
-using Microsoft.AspNetCore.Components.WebAssembly.Http;
-using SimulacionHollywoodStudio;
-using SimulacionHollywoodStudio.Shared;
-using Radzen.Blazor;
-using Services;
-
 using Microsoft.JSInterop;
 using Model;
 using Radzen;
 
 namespace SimulacionHollywoodStudio.Pages;
+
 public partial class Simulador
 {
     public double IngresosEsperados { get; set; }
     public string Respuesta { get; set; } = String.Empty;
     public string Estado { get; set; } = "Esperando...";
     public string? AlertMessage { get; set; }
-    const double PrecioEntrada = 109;
     //Promedio Mensual
     public double TiempoEsperaPromedioMensual { get; set; }
     public IEnumerable<DatoEspera> TiemposDeEsperaPromedioMensual { get; set; } = new List<DatoEspera>();
@@ -44,6 +27,7 @@ public partial class Simulador
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+        simulador.OnChange += StateHasChanged;
         OnDateChanged(selectedDate);
     }
 
@@ -60,8 +44,8 @@ public partial class Simulador
             tiemposDeEsperaFiltrados = TiemposDeEspera.Where(d => d.TiempoEspera.Keys.Any(k => k.Date == selectedDate.Date));
             if (tiemposDeEsperaFiltrados.Any())
             {
-                TiempoEsperaPromedioRR = tiemposDeEsperaFiltrados.FirstOrDefault(a => a.Nombre == Atracciones.RiseOfTheResistance)?.TiempoEspera.Where(k => k.Key.Date == selectedDate.Date).DefaultIfEmpty().Average(t => t.Value) ?? 0;
-                TiempoEsperaPromedioMF = tiemposDeEsperaFiltrados.FirstOrDefault(a => a.Nombre == Atracciones.MilleniumFalcom)?.TiempoEspera.Where(k => k.Key.Date == selectedDate.Date).DefaultIfEmpty().Average(t => t.Value) ?? 0;
+                TiempoEsperaPromedioRR = GetTiempoPromedio(Atracciones.RiseOfTheResistance);
+                TiempoEsperaPromedioMF = GetTiempoPromedio(Atracciones.MilleniumFalcom);
                 TiempoEsperaPromedio = (TiempoEsperaPromedioMF + TiempoEsperaPromedioRR);
                 await JSRuntime.InvokeVoidAsync("plotFunction", TiempoEsperaPromedio);
             }
@@ -87,7 +71,6 @@ public partial class Simulador
                             DateTime.DaysInMonth(selectedDate.Year, selectedDate.Month)))
                     : newDate
               );
-
         OnDateChanged(selectedDate);
     }
 
@@ -95,17 +78,11 @@ public partial class Simulador
     {
         Estado = "Simulando...";
         AlertMessage = string.Empty;
-        // Validación de los ingresos esperados.
         if (!ValidarIngresosEsperados())
             return;
-
-        // Simulación y asignación de los resultados
         SimulacionYAsignacionResultados();
-        // Comprobación y manejo de los resultados
         Estado = string.IsNullOrEmpty(Respuesta) ? "Error: No se recibió respuesta" : "Simulacion completada.";
-        // Actualización de la gráfica
         await JSRuntime.InvokeVoidAsync("plotFunction", TiempoEsperaPromedio);
-        // Actualización de la fecha
         OnDateChanged(selectedDate);
     }
 
@@ -122,10 +99,10 @@ public partial class Simulador
 
     private void SimulacionYAsignacionResultados()
     {
-        var simulacionResult = simulador.Simular((int)IngresosEsperados * 1000000, PrecioEntrada);
-        Respuesta = simulacionResult.Respuesta;
-        TiemposDeEspera = simulacionResult.TiemposDeEspera;
-        TiempoEsperaPromedioMensual = TiempoEsperaPromedio = simulacionResult.TiempoEsperaPromedio;
+        simulador.Simular((int)IngresosEsperados * 1000000);
+        TiemposDeEspera = simulador.TiemposDeEspera;
+        TiempoEsperaPromedioMensual = TiempoEsperaPromedio = simulador.TiemposEsperaPromedio;
+        tiemposDeEsperaFiltrados = simulador.TiemposDeEspera;
         var tiempoEsperaRiseOfResistance = ObtenerTiempoEspera(Atracciones.RiseOfTheResistance);
         var tiempoEsperaMilleniumFalcom = ObtenerTiempoEspera(Atracciones.MilleniumFalcom);
         TiempoEsperaPromedioRRMensual = TiempoEsperaPromedioRR = tiempoEsperaRiseOfResistance;
@@ -133,7 +110,7 @@ public partial class Simulador
     }
 
     private double ObtenerTiempoEspera(Atracciones atraccion) =>
-        TiemposDeEspera.FirstOrDefault(a => a.Nombre == atraccion)
+        simulador.TiemposDeEspera.FirstOrDefault(a => a.Nombre == atraccion)
         ?.TiempoEspera.Where(t => t.Value > 0).DefaultIfEmpty()
         .Average(t => t.Value) ?? 0;
 
@@ -142,9 +119,8 @@ public partial class Simulador
         // Calcular el promedio mensual de los tiempos de espera para todas las atracciones
         TiempoEsperaPromedioRR = TiempoEsperaPromedioRRMensual;
         TiempoEsperaPromedioMF = TiempoEsperaPromedioMFMensual;
-        TiempoEsperaPromedio = TiempoEsperaPromedioMensual;
         // Actualizar el gráfico con el nuevo promedio mensual
-        await JSRuntime.InvokeVoidAsync("plotFunction", TiempoEsperaPromedio);
+        await JSRuntime.InvokeVoidAsync("plotFunction", simulador.TiemposEsperaPromedio);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

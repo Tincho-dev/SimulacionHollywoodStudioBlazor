@@ -1,5 +1,4 @@
-﻿@using Services
-@using Model
+﻿@using Model
 @inject ISimuladorColasEsperaService simulador
 @inject IJSRuntime JSRuntime
 
@@ -113,7 +112,7 @@
                      style="transition: height 0.5s ease; display:block; min-height:100px">
                     <h3>Estado del Simulador</h3>
                     <p>@Estado</p>
-                    <p>@Respuesta</p>
+                    <p>@simulador.Respuesta</p>
                 </div>
                 <div class="p-2 contenedor_Datos d-none d-md-block">
                     <div class="row">
