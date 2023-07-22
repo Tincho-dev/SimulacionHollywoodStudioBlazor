@@ -65,33 +65,6 @@ a, .btn-link {
 
 /*Estilos componenete de simulacion*/
 
-/* Estilos para el modo claro */
-body.light-mode {
-    background-color: #f2f1f7 !important;
-    color: black !important;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh !important;
-/*    overflow-y: hidden;
-*/}
-
-
-/* Navbar en modo claro */
-.navbar {
-    border-bottom: 3px solid black; /* Estilo de borde deseado */
-    border-radius: 5px; /* Opcional: añade esquinas redondeadas al borde */
-    background-color: white;
-}
-
-
-nav a {
-    /* Estilos para la etiqueta <a> dentro de <nav> */
-    color: black;
-    text-decoration: none;
-    font-size: 35px;
-
-}
-
 footer {
     background-color: white;
     width: 100%;
