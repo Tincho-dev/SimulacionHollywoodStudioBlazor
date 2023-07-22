@@ -71,7 +71,23 @@ public partial class Simulador
     void ChangeDate(int days)
     {
         var newDate = selectedDate.AddDays(days);
-        selectedDate = days < 0 && selectedDate.Day == 1 ? new DateTime(selectedDate.Year, selectedDate.Month, DateTime.DaysInMonth(selectedDate.Year, selectedDate.Month)) : (newDate.Month != selectedDate.Month ? (days > 0 ? new DateTime(selectedDate.Year, selectedDate.Month, 1) : new DateTime(selectedDate.Year, selectedDate.Month, DateTime.DaysInMonth(selectedDate.Year, selectedDate.Month))) : newDate);
+        selectedDate = days < 0 && selectedDate.Day == 1
+            ? new DateTime(
+                selectedDate.Year,
+                selectedDate.Month,
+                DateTime.DaysInMonth(selectedDate.Year, selectedDate.Month))
+            : (
+                newDate.Month != selectedDate.Month
+                    ? (
+                        days > 0
+                        ? new DateTime(selectedDate.Year, selectedDate.Month, 1)
+                        : new DateTime(
+                            selectedDate.Year,
+                            selectedDate.Month,
+                            DateTime.DaysInMonth(selectedDate.Year, selectedDate.Month)))
+                    : newDate
+              );
+
         OnDateChanged(selectedDate);
     }
 
@@ -81,9 +97,7 @@ public partial class Simulador
         AlertMessage = string.Empty;
         // Validación de los ingresos esperados.
         if (!ValidarIngresosEsperados())
-        {
             return;
-        }
 
         // Simulación y asignación de los resultados
         SimulacionYAsignacionResultados();
@@ -103,7 +117,6 @@ public partial class Simulador
             Estado = "Error en la entrada.";
             return false;
         }
-
         return true;
     }
 
@@ -119,7 +132,7 @@ public partial class Simulador
         TiempoEsperaPromedioMFMensual = TiempoEsperaPromedioMF = tiempoEsperaMilleniumFalcom;
     }
 
-    private double ObtenerTiempoEspera(Atracciones atraccion) => 
+    private double ObtenerTiempoEspera(Atracciones atraccion) =>
         TiemposDeEspera.FirstOrDefault(a => a.Nombre == atraccion)
         ?.TiempoEspera.Where(t => t.Value > 0).DefaultIfEmpty()
         .Average(t => t.Value) ?? 0;
